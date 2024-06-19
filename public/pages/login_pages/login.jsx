@@ -15,7 +15,8 @@ export default function Login() {
     const dispatch = useDispatch();
 
     //Форма для отправки get запроса на сервер
-    const [formData, setFormData] = useState({ email: '', passwrd: '' });
+    //const [formData, setFormData] = useState({ email: '', passwrd: '' });
+    const [formData, setFormData] = useState({ email: '', password: '' });
 
     const [serverResponse, setServerResponse] = useState(null); // Создаем состояние для хранения ответа сервера
 
@@ -28,7 +29,7 @@ export default function Login() {
             [e.target.name]: e.target.value
         });
 
-        if (formData.email != "" && formData.passwrd != "") {
+        if (formData.email != "" && formData.password != "") {
             setDis(false);
         } else {
             setDis(true);
@@ -49,6 +50,8 @@ export default function Login() {
                 body: JSON.stringify(formData)
             });
 
+            // const response = await fetch('http://172.24.80.146:8080/users/login');
+
             if (!response.ok) {
                 throw new Error('Сетевой ответ был не ok.');
             }
@@ -57,9 +60,9 @@ export default function Login() {
             console.log(data);
 
             if (data === undefined || data === null) {
-                //alert("Ответ получен. Пользователь не найден.");
+                alert("Ответ получен. Пользователь не найден.");
             } else {
-                //alert(`Ответ получен. Пользователь ${data.login} найден.`);
+                alert(`Ответ получен. Пользователь ${data.login} найден.`);
                 dispatch(setUser(data));
                 navigate('/');
             }
@@ -84,7 +87,7 @@ export default function Login() {
                 <div className="mainform">
                     <form onSubmit={handleSubmit}>
                         <input type="email" name="email" placeholder="Эл. почта" value={formData.email} onChange={handleInputChange} className="inputField Login"></input>
-                        <input type="password" name="passwrd" placeholder="Пароль" value={formData.passwrd} onChange={handleInputChange} className="inputField Password"></input>
+                        <input type="password" name="password" placeholder="Пароль" value={formData.password} onChange={handleInputChange} className="inputField Password"></input>
                         <div className="link forgot">
                             <Link to="/recovery" className="link forgot">Забыли пароль ?</Link>
                         </div>

@@ -20,19 +20,24 @@ export default function SignUp() {
     const [allClear, setAllClear] = useState(false);
 
     //Создание формы для будущей отправки на сервер путём POST запроса.
-    const [formData, setFormData] = useState({nickname: '', email: '', passwrd: ''});
+    const [formData, setFormData] = useState({ nickname: '', email: '', password: '' });
 
     const [dis, setDis] = useState(false);
 
     const navigate = useNavigate();
 
     //Функция по отправке POST запроса на севрер
-    const handleSubmit = async (e) =>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try{
+        try {
             setDis(true);
-            console.log(formData);
+            //console.log(formData);
+            const data = new FormData();
+            data.append('email', formData.email);
+            data.append('nickname', formData.nickname);
+            data.append('password', formData.password);
+            console.log(data);
             const response = await fetch('http://localhost:3000/register', {
                 method: 'POST',
                 headers: {
@@ -40,15 +45,22 @@ export default function SignUp() {
                 },
                 body: JSON.stringify(formData)
             });
+            // const response = await fetch('http://172.24.80.146:8080/users/register', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type' : 'application/json'
+            //     },
+            //     body: data //JSON.stringify(formData)
+            // });
             //Если запрос отправлен успешно
-            if (response.ok && response.status === 200){
+            if (response.ok && response.status === 200) {
                 navigate('/');
             }
             //Если запрос был отправлен неуспешно(пока что это всё равно хорошо)
-            else{
+            else {
                 alert('Чёт неработает');
             }
-        } catch(error) {
+        } catch (error) {
             console.error(`Ошибка: ${error}`);
             setDis(false);
         }
@@ -61,7 +73,7 @@ export default function SignUp() {
             setFormData({
                 nickname: username,
                 email: email,
-                passwrd: password
+                password: password
             });
         }
         else {

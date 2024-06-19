@@ -1,0 +1,138 @@
+.file-input {
+    &__label {
+        display: flex;
+        width: 25%;
+        min-width: 160px;
+        margin-left: 20px;
+        height: 200px;
+        flex-direction: column;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+        border-color: #FFF;
+        border-style: dashed;
+        border-radius: 15px;
+
+        &::before {
+            content: '+';
+            font-size: 50px;
+            color: #ccc;
+        }
+
+        &::after {
+            content: 'перетащите сюда картинку не менее 98 x 98 пикселей чтобы изменить аватар';
+            color: #ccc;
+            text-align: center;
+        }
+    }
+
+    &__label-bg {
+        display: flex;
+        width: 25%;
+        min-width: 160px;
+        margin-left: 20px;
+        height: 200px;
+        flex-direction: column;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+        border-color: #FFF;
+        border-style: dashed;
+        border-radius: 15px;
+
+        &::before {
+            content: '+';
+            font-size: 50px;
+            color: #ccc;
+        }
+
+        &::after {
+            content: 'перетащите сюда картинку чтобы изменить фон';
+            color: #ccc;
+            text-align: center;
+        }
+    }
+
+    &__input {
+        opacity: 0;
+        width: 0.1px;
+        height: 0.1px;
+        position: absolute;
+    }
+
+    &__image-container {
+        display: flex;
+        flex-direction: column; // flex flex-col
+        align-items: center; // items-center
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+        position: absolute;
+        width: 80vh;
+    }
+
+    &__image {
+        max-height: 70vh;
+    }
+}
+
+.error-message {
+    color: #f87171; // text-red-400
+    font-size: 0.75rem; // text-xs
+}
+
+.submit-button {
+    display: flex;
+    color: #ffffff;
+    font-family: 'Fira Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    margin-top: 1rem;
+    margin-right: 10px;
+    border-style: solid;
+    background-color: rgba($color: #ffffff, $alpha: 0.2);
+
+    &:hover {
+        background-color: rgba($color: #ffffff, $alpha: 0.3);
+    }
+}
+
+.cancel-button {
+    display: flex;
+    color: #b50000;
+    font-family: 'Fira Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    margin-top: 1rem;
+    margin-left: 10px;
+    border-style: solid;
+    border-color: #b50000;
+    background-color: rgba($color: #ffffff, $alpha: 0.0);
+
+    &:hover {
+        background-color: rgba($color: #ffffff, $alpha: 0.2);
+    }
+}
+
+// SCSS стили
+.preview-canvas {
+    margin-top: 1rem; // mt-4
+    display: none;
+    border: 1px solid black;
+    object-fit: contain;
+    width: 150px;
+    height: 150px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
