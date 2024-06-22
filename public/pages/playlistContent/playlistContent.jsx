@@ -7,24 +7,33 @@ import PlayerIcons from '../player_icons/player_icons';
 
 import './playlistContent.scss';
 
-export default function PlaylistContent() {
+export default function PlaylistContent({ isAlb = false }) {
     let [searchParams, setSearchParams] = useSearchParams();
 
-    const playlistId = searchParams.get('pl'); // Получаем 'playlistId' из строки запроса
+    const userid = useSelector((state) => state.user.userId);
+    //const [userData, setUserData] = useState(null);
+    const userData = useSelector((state) => state.user.userData);
+
+    const playlistId = searchParams.get('pl');
     const [urlData, setUrlData] = useState([]);
 
     const [activeSong, setActiveSong] = useState(null);
 
+    //const [dataLoaded, setDataLoaded] = useState(false);
+
     const [editPlaylist, setEditPlaylist] = useState(false);
 
     const [playlistParametrs, setPlaylistParametrs] = useState({
-        playlistTitle: "",
-        playlistAuthor: "",
+        playlistId: 0,
+        playlistTitle: "Понравившаяся музыка",
+        playlistAuthor: "Создано автоматически",
         duration: "--:--",
         authorsPlaylist: false,
         autoCreated: false,
         playlistLock: false,
-        playlistLiked: false
+        playlistLiked: false,
+        isAlbum: isAlb,
+        playlistContent: []
     });
 
     const [newPlaylistTitle, setNewPlaylistTitle] = useState("");
@@ -33,63 +42,100 @@ export default function PlaylistContent() {
 
     const { setFocus } = useContext(FocusContext);
 
-    const user = useSelector((state) => state.user.user);
+    const fetchDataPlaylist = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`http://172.24.80.146:8080/${isAlb ? "albums" : "playlists"}/${playlistId}/profile`);
+
+            if (!response.ok) {
+                setUrlData(null);
+                throw new Error('Что то пошло не так....');
+            }
+            const result = await response.json();
+            setUrlData(result);
+        } catch (error) {
+            setUrlData(null);
+            console.error('Ошибка при получении данных:', error);
+        }
+        setIsLoading(false);
+    }
+
+    const fetchDataHyst = async () => {
+        setIsLoading(true);
+        try {
+            const userFace = userData.face;
+
+            const response = await fetch(`http://172.24.80.146:8080/users/${userFace.itemID}/listened`);
+
+            if (!response.ok) {
+                setPlaylistParametrs(prevParams => ({
+                    ...prevParams,
+                    playlistContent: []
+                }));
+
+                throw new Error("Ошибка получения истории");
+            }
+
+            const dataHyst = await response.json();
+
+            setPlaylistParametrs(prevParams => ({
+                ...prevParams,
+                playlistContent: dataHyst
+            }));
+        } catch (error) {
+            console.error("Ошибка отправки запроса!", error);
+        }
+        setIsLoading(false);
+    }
 
     useEffect(() => {
-        setIsLoading(true);
-        const fetchData = async () => {
-            try {
-                const response = await fetch(`http://localhost:3000/playlist?pl=${playlistId}`);
-
-                if (!response.ok) {
-                    setUrlData(null);
-                    throw new Error('Что то пошло не так....');
-                }
-                const result = await response.json();
-                setUrlData(result);
-                //console.log(`urldata: ${urlData}\nuser: ${Boolean(user)}\n${'login' in user && 'id' in user}`);
-            } catch (error) {
-                setUrlData(null);
-                console.error('Ошибка при получении данных:', error);
-            }
-            setIsLoading(false);
+        if (playlistId !== "hyst" && playlistId !== "lK") {
+            fetchDataPlaylist();
         }
-
-        fetchData();
 
         switch (playlistId) {
             case "lK":
-                setPlaylistParametrs({
-                    ...playlistParametrs,
-                    playlistTitle: "Понравившаяся музыка",
-                    playlistAuthor: "Создано автоматически",
-                    authorsPlaylist: false,
-                    autoCreated: true
-                });
+                if (userData && userData.userActionsModel) {
+                    setIsLoading(true);
+                    console.log("hyst: ", userData && userData.userActionsModel);
+                    setPlaylistParametrs(prevParams => ({
+                        ...prevParams,
+                        playlistTitle: "Понравившаяся музыка",
+                        playlistAuthor: "Создано автоматически",
+                        authorsPlaylist: false,
+                        autoCreated: true,
+                        playlistContent: userData.userActionsModel.likedMusic
+                    }));
+                }
+                setIsLoading(false);
                 break;
 
             case "hyst":
-                setPlaylistParametrs({
-                    ...playlistParametrs,
-                    playlistTitle: "История прослушивания",
-                    playlistAuthor: "Создано автоматически",
-                    authorsPlaylist: false,
-                    autoCreated: true
-                });
+                if (userData && userData.userActionsModel) {
+                    setIsLoading(true);
+                    console.log("hyst: ", userData && userData.userActionsModel)
+                    setPlaylistParametrs(prevParams => ({
+                        ...prevParams,
+                        playlistTitle: "История прослушивания",
+                        playlistAuthor: "Создано автоматически",
+                        authorsPlaylist: false,
+                        autoCreated: true
+                    }));
+                    fetchDataHyst();
+                }
+                setIsLoading(false);
                 break;
 
             default:
-                setPlaylistParametrs({
-                    ...playlistParametrs,
-                    playlistTitle: "Какой-то плейлист",
-                    playlistAuthor: "Какой то автор",
-                    authorsPlaylist: true,
-                    autoCreated: false
-                });
+                if (userData && userData.userActionsModel) {
+                    setIsLoading(true);
+                    fetchDataPlaylist();
+                }
+                setIsLoading(false);
                 break;
         }
 
-    }, [playlistId]);
+    }, [playlistId, userData]);
 
     if (isLoading) {
         return (
@@ -123,16 +169,26 @@ export default function PlaylistContent() {
         setNewPlaylistTitle(e.target.value);
     }
 
-    const toggleSaveTitle = () => {
-        setPlaylistParametrs({
-            ...playlistParametrs,
-            playlistTitle: newPlaylistTitle
-        });
+    const toggleSaveTitle = async () => {
+
+        try {
+            const response = await fetch(`http://172.24.80.146:8080/playlists/${playlistParametrs.playlistId}/change-name?newName=${encodeURIComponent(newPlaylistTitle)}`);
+            if (!response.ok) {
+                throw new Error("Ошибка смены имени!!");
+            }
+
+            setPlaylistParametrs({
+                ...playlistParametrs,
+                playlistTitle: newPlaylistTitle
+            });
+        } catch (e) {
+
+        }
     }
 
     return (
         <>
-            {urlData != null && user && ('login' in user && 'id' in user) ?
+            {urlData !== null && userData && userData.userActionsModel ?
                 <>
                     <div className="user-playlist__all-containers">
                         <div className='user-playlist__info-container'>
@@ -143,7 +199,7 @@ export default function PlaylistContent() {
                                     playlistId === "hyst" ?
                                         <PlayerIcons icon_name={"playlist-history-icon"} classname={'playlist-image'} />
                                         :
-                                        <img className='playlist-image' src="https://cdni.iconscout.com/illustration/premium/thumb/404-7304110-5974976.png?f=webp" style={{backgroundColor: "#6CE0AF"}} />
+                                        <img className='playlist-image' src="https://cdni.iconscout.com/illustration/premium/thumb/404-7304110-5974976.png?f=webp" style={{ backgroundColor: "#6CE0AF" }} />
                                 }
                             </div>
                             <div className='user-playlist__info__container'>

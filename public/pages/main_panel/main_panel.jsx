@@ -2,40 +2,34 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
-import { setTrackUrl } from "../../../src/actions/userActions";
+import { setTrackId } from "../../../src/actions/userActions";
 
 import './main_panel.scss';
 
-const Playlist_div = ({ playlist = [] }) => {
+const Playlist_div = ({ playlist }) => {
 
     const dispatch = useDispatch();
 
-    const updateUrl = (newURL) => {
-        dispatch(setTrackUrl(newURL));
-        console.log(`new url: ${newURL}`);
-    };
+    const [newPl, setNewPl] = useState(playlist);
 
-    const handleButtonClick = (id) => {
-        updateUrl(`http://localhost:3000/music/${id}/1.m3u8`);
-        console.log(`id_track: ${id}`);
-    };
+    const updateTrackUrl = (trackId) => {
+        dispatch(setTrackId(trackId));
+        console.log(`id_track: ${trackId}`);
+    }
 
     return (
         <>
-            {playlist.map((pl, index) => {
+            {newPl.map((pl, index) => {
                 return (
                     <div key={index} className={"ContainerInfo"}>
-                        <button className="ContainerButton" onClick={() => handleButtonClick(pl.id)}>
-                            <img src={pl.img} className="ContainerImage" alt={pl.song_name}></img>
+                        <button className="ContainerButton" onClick={() => updateTrackUrl(pl.itemID)}>
+                            <img src={`http://172.24.80.146/images/${pl.coverID}.webp`} className="ContainerImage" alt={pl.song_name}></img>
                         </button>
-                        {/* <p>{pl.song_name}</p>
-                        <p>{pl.Author}</p>
-                        <p>{pl.album}</p>
-                        <p>{pl.year}</p> */}
-                        <p className="trackInfo">{pl.song_name} &bull; 
-                            <a href="" className="trackInfo link">{pl.album}</a> &bull; 
-                            <a href="" className="trackInfo link">{pl.Author}</a> &bull; 
-                            {pl.year}
+                        <p className="trackInfo">{pl.title} &bull;
+                            <a href="" className="trackInfo link">{pl.username}</a> &bull;
+                            {pl.genre}
+                            {/* <a href="" className="trackInfo link">{pl.album}</a> &bull; 
+                            {pl.year} */}
                         </p>
                     </div>
                 );
@@ -46,48 +40,48 @@ const Playlist_div = ({ playlist = [] }) => {
 }
 
 export default function MainPanel() {
-    const user = useSelector((state) => state.user.user);
+    const userid = useSelector((state) => state.user.userId);
 
     const [dayMusicData, setDayMusicData] = useState([]);
-    const [authorsMusicData, setAuthorsMusicData] = useState([]);
-    const [usersMusicData, setUsersMusicData] = useState([]);
+    //const [authorsMusicData, setAuthorsMusicData] = useState([]);
+    const [genresChartData, setGenresChartData] = useState([]);
 
-    const [loading, setLoading] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const fetchUrls = async () => {
+        //console.log(`main_panel: ${userid}`);
+
+        const fetchData = async () => {
             setLoading(true);
-            const urls = [
-                'http://localhost:3000/musicday',
-                'http://localhost:3000/authorsmusic',
-                'http://localhost:3000/usersmusic'
-            ];
-
             try {
-                const response = await Promise.all(urls.map(url => fetch(url)));
-                const dataPromises = response.map(response => {
-                    if (!response.ok) {
-                        throw new Error(`Ошибка в запросе к ${response.url}`);
-                    }
-                    return response.json();
-                });
+                const response = await fetch('http://172.24.80.146:8080/music/daily');
+                if (!response.ok) {
+                    throw new Error("Ошибка получения данных!");
+                }
 
-                const [responseData1, responseData2, responseData3] = await Promise.all(dataPromises);
-                setDayMusicData(responseData1);
-                setAuthorsMusicData(responseData2);
-                setUsersMusicData(responseData3);
-            } catch (error) {
-                console.error('Ошибка получении данных:', error);
+                const data = await response.json();
+
+                setDayMusicData(data);
+            } catch (e) {
+                console.error("Ошибка связи с сервером!!");
             }
             setLoading(false);
         }
 
-        fetchUrls();
+        fetchData();
+        //console.log(`Main panel: ${userid}`);
     }, [])
+
+    if (loading) {
+        return (
+            <>
+            </>
+        );
+    }
 
     return (
         <>
-            {user && ('login' in user && 'id' in user) ?
+            {!!userid ?
                 <>
                     <div className="allContainers">
                         {loading ?
@@ -102,13 +96,13 @@ export default function MainPanel() {
                                 <div className="NewMusicFromAuthors">
                                     <h1 className="ContainerTitle">Новое от ваших авторов</h1>
                                     <div className="Containers">
-                                        <Playlist_div playlist={authorsMusicData} />
+                                        <Playlist_div playlist={dayMusicData} />
                                     </div>
                                 </div>
                                 <div className="UsersPlaylists">
                                     <h1 className="ContainerTitle">Плейлисты пользователей</h1>
                                     <div className="Containers">
-                                        <Playlist_div playlist={usersMusicData} />
+                                        <Playlist_div playlist={dayMusicData} />
                                     </div>
                                 </div>
                             </>

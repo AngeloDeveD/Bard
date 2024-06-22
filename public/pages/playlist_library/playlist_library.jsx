@@ -6,13 +6,14 @@ import './playlist_library.scss';
 
 export default function Explore() {
 
-    const user = useSelector((state) => state.user.user);
+    const userid = useSelector((state) => state.user.userId);
 
     const [genres, setGenres] = useState([]);
 
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        console.log(`playlist_library: ${userid}`);
         setIsLoading(true);
         const fetchData = async () => {
             try {
@@ -45,7 +46,7 @@ export default function Explore() {
 
     return (
         <>
-            {user && ('login' in user && 'id' in user) ?
+            {!!userid ?
                 <>
                     <div className="allContainers">
                         <h1 className="ContainerTitle">Жанры</h1>

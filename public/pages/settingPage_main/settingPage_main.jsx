@@ -5,11 +5,11 @@ import { useSelector, useDispatch } from "react-redux";
 import FileDropArea from "../filedroparea/filedroparea";
 import PlayerIcons from "../player_icons/player_icons";
 
-import { setUser } from "../../../src/actions/userActions";
+import { setUser, setUserEmail } from "../../../src/actions/userActions";
 
 import './settingPage_main.scss';
 
-const ChangeEmail = ({ user }) => {
+const ChangeEmail = () => {
     const [confirmedPassword, setConfirmedPassword] = useState(false);
     const [confirmedEmail, setConfirmedEmail] = useState(false);
     const [codeSended, setCodeSended] = useState(false);
@@ -174,7 +174,10 @@ const ChangePassword = ({ user, closeSettings }) => {
 }
 
 export default function SettingPageMain() {
-    const user = useSelector(state => state.user.user);
+    //const userid = useSelector(state => state.user.userId);
+    const userData = useSelector(state => state.user.userData);
+    const userEmail = useSelector(state => state.user.userEmail);
+
     const [params, setParams] = useSearchParams();
 
     const dispatch = useDispatch();
@@ -197,8 +200,9 @@ export default function SettingPageMain() {
 
     const [isBg, setIsBg] = useState(false);
 
-    const [icon, setIcon] = useState(user.img_url);
-    const [bgImage, setBgImage] = useState('http://localhost:3000/image/background.png');
+    const [icon, setIcon] = useState(`http://172.24.80.146/images/${userData.face.coverID}.webp`);
+    const [bgImage, setBgImage] = useState(`http://172.24.80.146/images/${userData.headerID}.webp`);
+    const [userName, setUserName] = useState(userData.face.username);
 
     const backgroundUrl = useRef(
         `${bgImage}`
@@ -241,10 +245,33 @@ export default function SettingPageMain() {
 
     const handleSubmitNewNickname = (e) => {
         e.preventDefault();
-        dispatch(setUser({
-            ...user,
-            username: newNickname
-        }));
+
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://172.24.80.146:8080/users/${userData.face.itemID}/change-name?newName=${newNickname}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Ошибка получения данных от сервера!!");
+                }
+
+                dispatch(setUser(prevParams => ({
+                    ...prevParams,
+                    //face.username: ""
+                })));
+
+                //const data = await response.json()
+
+            } catch (error) {
+                console.error("Ошибка: ", error);
+            }
+        }
+
+        fetchData();
 
         console.log(user);
         setChangeNickname(false);
@@ -254,7 +281,7 @@ export default function SettingPageMain() {
     const handleSettingsClose = () => {
         setSettingsActive(false);
         setChangePassword(false);
-      };
+    };
 
     const updateAvatar = (imgSrc) => {
         avatarUrl.current = imgSrc;
@@ -289,7 +316,7 @@ export default function SettingPageMain() {
     };
 
     useEffect(() => {
-        console.log(user.img_url);
+        //console.log(user.img_url);
 
         const handleResize = () => {
             setPanelDimensions({
@@ -306,6 +333,7 @@ export default function SettingPageMain() {
     }, []);
 
     useEffect(() => {
+        //console.log(`settingPage_main: ${userid}`);
         setModalOpen(!!sendFile);
         setSettingsActive(!!sendFile);
     }, [sendFile]);
@@ -353,7 +381,7 @@ export default function SettingPageMain() {
                                     </>
                                     :
                                     <>
-                                        <h3 className="setting-page__main-content__allContent__info__text profileName-text">{user.username}</h3>
+                                        <h3 className="setting-page__main-content__allContent__info__text profileName-text">{userName}</h3>
                                         <button className="setting-page__main-content__allContent__info__buttons profileName-changeButton" onClick={handleClickChangeNickname} disabled={settingsActive}>
                                             <PlayerIcons icon_name={"settings_edit"} />
                                         </button>
@@ -362,7 +390,7 @@ export default function SettingPageMain() {
                             </div>
                             <div className="setting-page__main-content__allContent__info">
                                 <h3 className="setting-page__main-content__allContent__info__text">Адрес электронная почты:</h3>
-                                <h3 className="setting-page__main-content__allContent__info__text profileName-text">{maskEmail("123useremail@gmail.com")}</h3>
+                                <h3 className="setting-page__main-content__allContent__info__text profileName-text">{maskEmail(userEmail)}</h3>
                                 <button className="setting-page__main-content__allContent__info__buttons profileName-changeButton" onClick={handleClickChangeEmail} disabled={settingsActive}>
                                     <PlayerIcons icon_name={"settings_edit"} />
                                 </button>

@@ -9,7 +9,7 @@ export default function SignUp() {
     //Создание переменных под логин, email, 2 паролей и сообщения, которое появляется при введении паролей.
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState(null);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
 
@@ -26,35 +26,29 @@ export default function SignUp() {
 
     const navigate = useNavigate();
 
+    const encodeQueryParameters = (params) => {
+        return Object.entries(params).map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join('&');
+    }
+
     //Функция по отправке POST запроса на севрер
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
             setDis(true);
-            //console.log(formData);
-            const data = new FormData();
-            data.append('email', formData.email);
-            data.append('nickname', formData.nickname);
-            data.append('password', formData.password);
-            console.log(data);
-            const response = await fetch('http://localhost:3000/register', {
+            const urlWithParams = new URL('http://172.24.80.146:8080/users/register');
+            urlWithParams.search = encodeQueryParameters(formData);
+            const response = await fetch(urlWithParams, {
                 method: 'POST',
                 headers: {
-                    'Content-Type' : 'application/json'
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData)//data
             });
-            // const response = await fetch('http://172.24.80.146:8080/users/register', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type' : 'application/json'
-            //     },
-            //     body: data //JSON.stringify(formData)
-            // });
             //Если запрос отправлен успешно
             if (response.ok && response.status === 200) {
                 navigate('/');
+
             }
             //Если запрос был отправлен неуспешно(пока что это всё равно хорошо)
             else {
@@ -123,16 +117,16 @@ export default function SignUp() {
                 setMessage("Пароли не совпадают.")
             }
             else {
-                setMessage("Подтвердите пароль!")
+                setMessage(null);
             }
             setPasswAccess(false);
         }
         else if (passwordValue === '') {
-            setMessage("Придумайте пароль");
+            setMessage(null);
             setPasswAccess(false);
         }
         else {
-            setMessage("Всё хорошо!!");
+            setMessage(null);
             setPasswAccess(true);
         }
     }
@@ -150,13 +144,13 @@ export default function SignUp() {
                     <div className="mainform">
                         <input type="text" placeholder="Логин" className="inputField Login" onChange={handleConfirmUsername}></input>
                         <input type="email" placeholder="Эл. почта" className="inputField Login" onChange={handleConfirmEmailChange}></input>
-                        <input type="password" placeholder="Пароль" className={`inputField Login ${password !== confirmPassword ? "Red" : ""}`} value={password} onChange={handlePasswordChange}></input>
+                        <input type="password" placeholder="Пароль" className={`inputField Login ${ message && password !== confirmPassword ? "Red" : ""}`} value={password} onChange={handlePasswordChange}></input>
                         <input type="password" placeholder="Повторить пароль" className={`inputField Password ${password !== confirmPassword ? "Red" : ""}`} value={confirmPassword} onChange={handleConfirmPasswordChange}></input>
                         <div className="link forgot">
                             <Link to="/login" className="link forgot">Войти в аккаунт</Link>
                         </div>
                         <div style={{ paddingTop: '5%' }}>
-                            <input type="submit" value="Создать аккаунт" className="inputField Button middle" disabled={!allClear && dis} style={{ width: '56%' }}></input>
+                            <input type="submit" value="Создать аккаунт" className="inputField Button middle" disabled={!allClear || dis} style={{ width: '56%' }}></input>
                         </div>
                         {message && <p style={{ color: password === confirmPassword ? 'green' : 'red' }}>{message}</p>}
                     </div>

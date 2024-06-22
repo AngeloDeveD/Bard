@@ -1,12 +1,14 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import HomePanel from "../home_panel/home_panel";
 import LibraryPanel from "../library_panel/library_panel";
 import SearchPanel from "../search_panel/search_panel";
 import Player from "../player/player";
 import ProgressBar from '../load_page/load_page';
+
+import { setUser } from "../../../src/actions/userActions";
 
 const MainPanel = lazy(() => import('../main_panel/main_panel'));
 const Explore = lazy(() => import('../playlist_library/playlist_library'));
@@ -20,14 +22,22 @@ import './song_page.scss';
 
 export default function MainPage() {
     const location = useLocation();
-    const user = useSelector((state) => state.user.user);
+    const dispatch = useDispatch();
+
+    const userid = useSelector((state) => state.user.userId);
+    //const userData = useSelector((state) => state.user.userData);
 
     const [panelDimensions, setPanelDimensions] = useState({ playerHeight: 0, searchHeight: 0 });
 
     const [progress, setProgress] = useState(0);
     const [isLoaded, setIsLoaded] = useState(false);
 
+    //const [userData, setUserData] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
+        console.log(`song-page: ${userid}`);
+
         const handleResize = () => {
             setPanelDimensions({
                 playerHeight: document.querySelector('.playerContainer')?.clientHeight || 0,
@@ -61,7 +71,6 @@ export default function MainPage() {
 
     // Оставьте остальную часть кода без изменений
 
-
     useEffect(() => {
         if (progress >= 100 && !isLoaded) {
             setIsLoaded(true);
@@ -69,16 +78,44 @@ export default function MainPage() {
         }
     }, [progress, isLoaded]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+            try {
+                const response = await fetch(`http://172.24.80.146:8080/users/${userid}/profile`);
+
+                if (!response.ok) {
+                    throw new Error('Ошибка связи с сервером!!');
+                }
+                
+                //setUserData(response.json());
+                const data = await response.json();
+
+                dispatch(setUser(data));
+                console.log("song_page", userData);
+
+            } catch (e) {
+                console.error("Ошибка запроса!!");
+            }
+            setIsLoading(false);
+        }
+
+        fetchData();
+    }, []);
+
     const panelHeight = {
         height: `calc(100vh - (${panelDimensions.searchHeight + 16}px + ${panelDimensions.playerHeight + 16}px))`
     };
 
     function renderPanel() {
+        //console.log("Content loading start!");
         switch (location.pathname) {
             case '/explore':
                 return <Explore />;
             case '/playlist':
-                return <PlaylistContent />;
+                return <PlaylistContent isAlb={false}/>;
+            case '/album':
+                return <PlaylistContent isAlb={true}/>;
             case '/profile':
                 return <ProfilePage isUserProfile={true} />;
             case '/user':
@@ -90,6 +127,13 @@ export default function MainPage() {
         }
     }
 
+    if (isLoading) {
+        return (
+            <>
+            </>
+        );
+    }
+
     return (
         <>
             <div className="allPanels">
@@ -97,7 +141,7 @@ export default function MainPage() {
                     {location.pathname !== "/settings" ?
                         <>
                             <HomePanel />
-                            <LibraryPanel user={user} />
+                            <LibraryPanel />
                         </>
                         :
                         <>

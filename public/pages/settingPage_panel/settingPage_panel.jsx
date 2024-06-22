@@ -5,7 +5,8 @@ import { useSelector } from "react-redux";
 import './settingPage_panel.scss';
 
 export default function SettingPagePanel() {
-    const user = useSelector(state => state.user.user);
+    //const userid = useSelector(state => state.user.userId);
+    //const userData = useSelector(state => state.user.userData);
 
     const navigate = useNavigate();
 
@@ -24,6 +25,8 @@ export default function SettingPagePanel() {
     ]);
 
     useEffect(() => {
+        //console.log(`settingPage_panel: ${userid}`);
+
         const handleResize = () => {
             const player = document.querySelector('.playerContainer');
             setPlayerHeight(player.clientHeight);

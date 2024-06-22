@@ -11,7 +11,8 @@ export default function LibraryPanel() {
     const [playerHeight, setPlayerHeight] = useState(0);
     const [titleHeight, setTitleHeight] = useState(0);
 
-    const user = useSelector((state) => state.user.user);
+    const userid = useSelector((state) => state.user.userId);
+    const [userData, setUserData] = useState({});
 
     //const user = useSelector((state) => state.user.user);
 
@@ -19,6 +20,8 @@ export default function LibraryPanel() {
     //..............................//
 
     useEffect(() => {
+        //console.log(`library_panel: ${userid}`);
+
         const handleResize = () => {
             const player = document.querySelector('.playerContainer');
             setPlayerHeight(player.clientHeight);
@@ -40,7 +43,7 @@ export default function LibraryPanel() {
 
     return (
         <>
-            {user && ('login' in user && 'id' in user) ? 
+            {!!userid ?
                 <div className={"lib backdrop"} style={panelHeight}>
                     <div className={"lib content"}>
                         <div className={"lib title"}>
@@ -51,7 +54,7 @@ export default function LibraryPanel() {
                         </div>
                     </div>
                 </div>
-            :
+                :
                 <Navigate to="/login" replace={true} />
             }
         </>

@@ -9,11 +9,12 @@ import './search_panel.scss';
 export default function SearchPanel() {
     const navigate = useNavigate();
 
-    const user = useSelector(state => state.user.user);
+    //const userid = useSelector(state => state.user.userId);
+    const userData = useSelector(state => state.user.userData);
 
     const [search, setSearch] = useState({ searchText: '' });
     const [showPageSettings, setShowPageSettings] = useState(false);
-    const [icon, setIcon] = useState(user.img_url);
+    const [icon, setIcon] = useState("http://172.24.80.146/images/1.webp");
     const [showSearchPanelHelper, setShowSearchPanel] = useState(false);
 
     const [searchDimensions, setSearchDimensions] = useState({ searchMarginWidth: 0, searchMarginHeight: 0, searchPanelWidth: 0 });
@@ -70,6 +71,13 @@ export default function SearchPanel() {
     };
 
     useEffect(() => {
+        //console.log(`search_panel: ${userid}`);
+
+        if(userData && userData.face){
+            const userFace = userData.face;
+            setIcon(`http://172.24.80.146/images/${userFace.coverID}.webp`);
+        }
+
         document.addEventListener('mousedown', handleClickOutside);
 
         const handleResize = () => {
@@ -120,7 +128,7 @@ export default function SearchPanel() {
                         </form>
                     </div>
                     <button className="panel_inside user_icon user_icon_container" onClick={setShowSettings}>
-                        <img src={icon} onError={(e) => e.target.src = "https://cdni.iconscout.com/illustration/premium/thumb/404-7304110-5974976.png?f=webp"} className="panel_inside user_icon user_icon_image"></img>
+                        <img src={icon} className="panel_inside user_icon user_icon_image"></img> {/*onError={(e) => e.target.src = "https://cdni.iconscout.com/illustration/premium/thumb/404-7304110-5974976.png?f=webp"}*/}
                     </button>
                 </div>
             </div>

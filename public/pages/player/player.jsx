@@ -15,12 +15,14 @@ const loopStates = {
 
 export default function Player() {
 
-    const trackUrl = useSelector(state => state.user.currentURL);
+    const userId = useSelector(state => state.user.userId);
+
+    const trackId = useSelector(state => state.user.trackId);
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [played, setPlayed] = useState(0.0);
-    const [volume, setVolume] = useState(1.0); //Означает, что начальный уровень громкости будет равен 50%
+    const [volume, setVolume] = useState(1.0); //Означает, что начальный уровень громкости будет равен 100%
     const [loopState, setLoopState] = useState(loopStates.NO_LOOP);
     const [duration, setDuration] = useState(0);
     const [seeking, setSeeking] = useState(false);
@@ -32,7 +34,9 @@ export default function Player() {
     const [disablePlayer, setDisablePlayer] = useState(false);
     const [showAddToPlaylist, setShowAddToPlaylist] = useState(false);
 
-    const [currentSong, setCurrentSong] = useState(trackUrl);
+    const [trackUrl, setTrackUrl] = useState(`http://172.24.80.146/music/${trackId}/${trackId}.m3u8`);
+
+    const [currentSong, setCurrentSong] = useState(trackId);
     const [previousSongs, setPreviousSong] = useState([]);
     const [nextSongs, setNextSongs] = useState([]);
 
@@ -57,7 +61,7 @@ export default function Player() {
     }
 
     const togglePlayPause = () => {
-        if (trackUrl !== undefined) {
+        if (trackId !== undefined) {
             setIsPlaying(!isPlaying);
         }
     }
@@ -158,10 +162,34 @@ export default function Player() {
         }
     };
 
+    // const fetchDataListened = () => {
+    //     try{
+    //         const response = await fetch(`http://172.24.80.146:8080/music/${trackId}/listen`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify(userId)
+    //         });
+
+    //         if(!response.ok){
+    //             throw new Error('Ошибка отправки запроса!');
+    //         }
+
+
+    //     } catch(error) {
+
+    //     }
+    // }
+
     useEffect(() => {
         //url !== "" ? setIsPlaying(true) : setIsPlaying(false);
-        trackUrl === undefined ? setDisablePlayer(true) : setDisablePlayer(false);
-        console.log(`track_url: ${trackUrl}`);
+        trackId !== undefined ? () => {
+            setDisablePlayer(false);
+            //fetchDataListened();
+        } : setDisablePlayer(true);
+        //setDisablePlayer(trackId === undefined ? true : false);
+        console.log(`track_id: ${trackId}`);
 
         document.addEventListener('mousedown', handleClickOutside);
         console.log(`Music status: ${isPlaying ? "Playing" : "Pause"}.\nLoop button status: ${loopState}.`);
@@ -169,7 +197,7 @@ export default function Player() {
         console.log(`AddToPlaylist: ${showAddToPlaylist}`);
 
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, [isPlaying, loopState, trackUrl])
+    }, [isPlaying, loopState, trackId])
 
     return (
         <>

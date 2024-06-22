@@ -7,16 +7,18 @@ import './profilePage.scss';
 export default function ProfilePage({ isUserProfile = true }) {
     let [searchParams, setSearchParams] = useSearchParams();
 
-    const user = useSelector(state => state.user.user);
+    //const userid = useSelector(state => state.user.userId);
+    const userData = useSelector(state => state.user.userData);
 
     const navigate = useNavigate();
 
-    const [userIco, setUserIco] = useState(user.img_url);
-    const [userBackground, setUserBackground] = useState('http://localhost:3000/image/background.png');
-    const [userName, setUserName] = useState(user.username);
+    const [userID, setUserID] = useState(userData.face.itemID);
+    const [userIco, setUserIco] = useState(`http://172.24.80.146/images/${userData.face.coverID}.webp`);
+    const [userBackground, setUserBackground] = useState(`http://172.24.80.146/images/${userData.headerID}.webp`); //
+    const [userName, setUserName] = useState(userData.face.username);
     const [subscribers, setSubscribers] = useState(0);
-    const [subscribtions, setSubscribtions] = useState(0);
-    const [description, setDescription] = useState("Какой то тестовый текст, который тут есть и всегда будет.");
+    const [subscribtions, setSubscribtions] = useState(userData.subscribed);
+    const [description, setDescription] = useState(userData.tale);
     const [mouseEnter, setMouseEnter] = useState(false);
 
     const [subscribed, setSubscribed] = useState(false);
@@ -98,8 +100,10 @@ export default function ProfilePage({ isUserProfile = true }) {
     }
 
     useEffect(() => {
+        console.log(`profilePage: ${userID}`);
+
         if (!isUserProfile) {
-            if (userIdProfile === user.id) {
+            if (userIdProfile === userID) {
                 navigate('/profile');
             }
         }
@@ -147,7 +151,7 @@ export default function ProfilePage({ isUserProfile = true }) {
                                 </>
                                 :
                                 <>
-                                    <button className="profile p-button b-all-buttons a-edit-profile">Настройки профиля</button>
+                                    <button className="profile p-button b-all-buttons a-edit-profile" onClick={() => navigate("/settings?st=account")}>Настройки профиля</button>
                                 </>
                             }
                         </div>

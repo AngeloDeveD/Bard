@@ -1,6 +1,6 @@
 import { useState, lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { FocusProvider } from "./context/FocusContext";
 
 const Login = lazy(() => import('../public/pages/login_pages/login'));
@@ -9,20 +9,44 @@ const ForgotPassword = lazy(() => import('../public/pages/login_pages/forgotPass
 const SongPage = lazy(() => import('../public/pages/song_page/song_page'));
 const NotFound = lazy(() => import('../public/pages/404/404'));
 
+import { setUser } from "../src/actions/userActions";
+
 import './index.scss';
 
 export default function App() {
 
-  const user = useSelector((state) => state.user.user);
-  const [isLogged, setIsLogged] = useState(user && 'login' in user && 'id' in user);
+  const user = useSelector((state) => state.user.userId);
+  const [isLogged, setIsLogged] = useState(!!user);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setIsLogged(user && 'login' in user && 'id' in user);
+    setIsLogged(!!user);
+    console.log(`App: ${user}`);
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://172.24.80.146:8080/users/${user}/profile`);
+
+        if (!response.ok) {
+          throw new Error('Ошибка связи с сервером!!');
+        }
+
+        //setUserData(response.json());
+        const data = await response.json();
+        dispatch(setUser(data));
+
+      } catch (e) {
+        console.error("Ошибка запроса!!");
+      }
+    }
+
+    fetchData();
   }, [user]);
 
   return (
     <Routes>
-      <Route path='/' exact
+      <Route path='/'
         element={
           isLogged ?
             <Suspense fallback={<></>}>
@@ -48,6 +72,11 @@ export default function App() {
             <></>
           }
         />
+        <Route path='album'
+          element={
+            <></>
+          }
+        />
         <Route path='profile'
           element={
             <></>
@@ -55,10 +84,10 @@ export default function App() {
         />
         <Route path='user'
           element={
-          <></>
-        }
+            <></>
+          }
         />
-        <Route path='search' 
+        <Route path='search'
           element={
             <></>
           }

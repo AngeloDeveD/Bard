@@ -1,7 +1,8 @@
 const initialState = {
-    user: null,
-    trackURL: '',
-    userId: null
+    userData: null,
+    trackId: '',
+    userId: null,
+    userEmail: ''
 };
 
 const userReducer = (state = initialState, action) => {
@@ -9,13 +10,13 @@ const userReducer = (state = initialState, action) => {
         case 'LOGIN_SUCCESS':
             return{
                 ...state,
-                user: action.payload
+                userData: action.payload
             };
         
-        case 'TRACK_URL':
+        case 'TRACK_ID':
             return{
                 ...state,
-                currentURL: action.payload
+                trackId: action.payload
             };
 
         case 'USER_ID':
@@ -23,6 +24,12 @@ const userReducer = (state = initialState, action) => {
                 ...state,
                 userId: action.payload
             };
+
+        case 'USER_EMAIL':
+            return{
+                ...state,
+                userEmail: action.payload
+            }
         
         default:
             return state;
