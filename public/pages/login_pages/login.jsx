@@ -55,6 +55,10 @@ export default function Login() {
             if (!response.ok) {
                 throw new Error('Сетевой ответ был не ok.');
             }
+            
+            else if(response.status === 404){
+                throw new Error('Пользователь не найден');
+            }
 
             const data = await response.json();
             //console.log(data);
@@ -107,7 +111,7 @@ export default function Login() {
                         <input type="email" name="email" placeholder="Эл. почта" value={formData.email} onChange={handleInputChange} className="inputField Login"></input>
                         <input type="password" name="password" placeholder="Пароль" value={formData.password} onChange={handleInputChange} className="inputField Password"></input>
                         <div className="link forgot">
-                            <Link to="/recovery" className="link forgot" style={sendData ? {opacity: "0"} : {opacity: "1"}} disabled={sendData}>Забыли пароль ?</Link>
+                            <Link to="/recovery" className="link forgot" style={sendData ? {opacity: "0", cursor: "default"} : {opacity: "1"}} disabled={sendData}>Забыли пароль ?</Link>
                         </div>
                         <div>
                             <input type="submit" value="Войти" className="inputField Button middle" disabled={dis}></input>
@@ -117,7 +121,7 @@ export default function Login() {
                 <div className="spacer min">
                 </div>
                 <div className="link registration">
-                    <Link to="/register" className="link registration" style={sendData ? {opacity: "0"} : {opacity: "1"}} disabled={sendData}>У вас нет аккаунта ? Зарегистрируйтесь!</Link>
+                    <Link to="/register" className="link registration" style={sendData ? {opacity: "0", cursor: "default"} : {opacity: "1"}} disabled={sendData}>У вас нет аккаунта ? Зарегистрируйтесь!</Link>
                 </div>
             </div>
         </>

@@ -34,7 +34,7 @@ export default function Player() {
     const [disablePlayer, setDisablePlayer] = useState(false);
     const [showAddToPlaylist, setShowAddToPlaylist] = useState(false);
 
-    const [trackUrl, setTrackUrl] = useState(`http://172.24.80.146/music/${trackId}/${trackId}.m3u8`);
+    const [trackUrl, setTrackUrl] = useState('');
 
     const [currentSong, setCurrentSong] = useState(trackId);
     const [previousSongs, setPreviousSong] = useState([]);
@@ -183,6 +183,7 @@ export default function Player() {
     // }
 
     useEffect(() => {
+        setTrackUrl(`http://172.24.80.146/music/${trackId}/${trackId}.m3u8`);
         //url !== "" ? setIsPlaying(true) : setIsPlaying(false);
         trackId !== undefined ? () => {
             setDisablePlayer(false);
@@ -208,7 +209,7 @@ export default function Player() {
                     </div>
                     <div className='componentPosition middle'>
                         <ReactPlayer
-                            url={trackUrl}
+                            url={trackId !== '' ? trackUrl : ''}
                             playing={isPlaying}
                             controls={true}
                             width='0'
@@ -218,7 +219,7 @@ export default function Player() {
                             onDuration={onDuration}
                             ref={playerRef}
                             onSeek={onSeek}
-                            loop={loopState === loopStates.TRACK_LOOP ? true : false}
+                            loop={loopState === loopStates.TRACK_LOOP}
 
                         />
                         <div className="playerTime info">

@@ -22,26 +22,28 @@ export default function App() {
 
   useEffect(() => {
     setIsLogged(!!user);
-    console.log(`App: ${user}`);
+    //console.log(`App: ${user}`);
 
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`http://172.24.80.146:8080/users/${user}/profile`);
+    if (user) {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(`http://172.24.80.146:8080/users/${user}/profile`);
 
-        if (!response.ok) {
-          throw new Error('Ошибка связи с сервером!!');
+          if (!response.ok) {
+            throw new Error('Ошибка связи с сервером!!');
+          }
+
+          //setUserData(response.json());
+          const data = await response.json();
+          dispatch(setUser(data));
+
+        } catch (e) {
+          console.error("Ошибка запроса!!");
         }
-
-        //setUserData(response.json());
-        const data = await response.json();
-        dispatch(setUser(data));
-
-      } catch (e) {
-        console.error("Ошибка запроса!!");
       }
-    }
 
-    fetchData();
+      fetchData();
+    }
   }, [user]);
 
   return (
