@@ -23,36 +23,34 @@ const Content = ({ playlistData = [] }) => {
 
     return (
         <>
-            <div className='user-playlist__songs-container' style={playlistData.length !== 0 ? { marginLeft: "50px" } : {}}>
-                {playlistData && playlistData.length !== 0 ?
-                    playlistData.map((song, index) => {
-                        const isActive = song.itemID === activeSong;
-                        const buttonClass = isActive ? 'active' : '';
-                        //console.log("song-item", song.itemID);
-                        return (
-                            <button key={index} className={`user-playlist-button__container ${buttonClass}`} onClick={() => playSong(song.itemID)}>
-                                <img className='user-playlist-button__song-icon' src={`http://172.24.80.146/images/${song.coverID}.webp`}></img>
-                                <div className='user-playlist-button__incontainer'>
-                                    <h3 className='user-playlist-button alltext song-title_pl'>{song.title}</h3>
-                                </div>
-                                <div className='user-playlist-button__incontainer'>
-                                    <h3 className='user-playlist-button alltext song-author_pl'>{song.username}</h3>
-                                </div>
-                                <div className='user-playlist-button__incontainer'>
-                                    <h3 className='user-playlist-button alltext song-time_pl'>{`00:00`}</h3>
-                                </div>
-                            </button>
-                        );
-                    })
-                    :
-                    <div className='user-playlist-button__undefined__container'>
-                        <div className="user-playlist-button__undefined__container-content">
-                            <h3 className='user-playlist-button__undefined__text'>{`Плейлист пуст :(`}</h3>
-                            <button className='user-playlist-button__undefined__button' onClick={setFocus}>Добавить трек</button>
-                        </div>
+            {playlistData && playlistData.length !== 0 ?
+                playlistData.map((song, index) => {
+                    const isActive = song.itemID === activeSong;
+                    const buttonClass = isActive ? 'active' : '';
+                    //console.log("song-item", song.itemID);
+                    return (
+                        <button key={index} className={`user-playlist-button__container ${buttonClass}`} onClick={() => playSong(song.itemID)}>
+                            <img className='user-playlist-button__song-icon' src={`http://172.24.80.146/images/${song.coverID}.webp`}></img>
+                            <div className='user-playlist-button__incontainer'>
+                                <h3 className='user-playlist-button alltext song-title_pl'>{song.title}</h3>
+                            </div>
+                            <div className='user-playlist-button__incontainer'>
+                                <h3 className='user-playlist-button alltext song-author_pl'>{song.username}</h3>
+                            </div>
+                            <div className='user-playlist-button__incontainer'>
+                                <h3 className='user-playlist-button alltext song-time_pl'>{`00:00`}</h3>
+                            </div>
+                        </button>
+                    );
+                })
+                :
+                <div className='user-playlist-button__undefined__container'>
+                    <div className="user-playlist-button__undefined__container-content">
+                        <h3 className='user-playlist-button__undefined__text'>{`Плейлист пуст :(`}</h3>
+                        <button className='user-playlist-button__undefined__button' onClick={setFocus}>Добавить трек</button>
                     </div>
-                }
-            </div>
+                </div>
+            }
         </>
     );
 };
@@ -68,7 +66,6 @@ export default function PlaylistContent({ isAlb = false }) {
     const userid = useSelector((state) => state.user.userId);
     const userData = useSelector((state) => state.user.userData);
 
-    const [playlistContent, setPlaylistContent] = useState([]);
     const [playlistData, setPlaylistData] = useState([]);
 
     const [playlistInfo, setPlaylistInfo] = useState({
@@ -148,20 +145,20 @@ export default function PlaylistContent({ isAlb = false }) {
     }
 
     const toggleSaveTitle = async () => {
+        try {
+            const response = await fetch(`http://172.24.80.146:8080/playlists/${playlsitId}/change-name?newName=${encodeURIComponent(newPlaylistTitle)}`);
+            if (!response.ok) {
+                throw new Error("Ошибка смены имени!!");
+            }
 
-        // try {
-        //     const response = await fetch(`http://172.24.80.146:8080/playlists/${playlistParametrs.playlistId}/change-name?newName=${encodeURIComponent(newPlaylistTitle)}`);
-        //     if (!response.ok) {
-        //         throw new Error("Ошибка смены имени!!");
-        //     }
+            setPlaylistInfo(prevParams => ({
+                ...prevParams,
+                title: newPlaylistTitle
+            }))
 
-        //     setPlaylistParametrs({
-        //         ...playlistParametrs,
-        //         playlistTitle: newPlaylistTitle
-        //     });
-        // } catch (e) {
+        } catch (error) {
 
-        // }
+        }
 
         setEditPlaylist(false);
     }
@@ -220,7 +217,7 @@ export default function PlaylistContent({ isAlb = false }) {
 
             const data = await response.json();
             setPlaylistInfo({ title: data.face.title, description: data.face.username });
-            setPlaylistParams({ img_url: `http://172.24.80.146/images/${data.face.coverID}.webp`, isUsers: data.face.authorID === userData.face.authorID, isAutoCreated: false});
+            setPlaylistParams({ img_url: `http://172.24.80.146/images/${data.face.coverID}.webp`, isUsers: data.face.authorID === userData.face.authorID, isAutoCreated: false });
             setPlaylistData(data);
 
         } catch (error) {
