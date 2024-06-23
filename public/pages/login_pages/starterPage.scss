@@ -114,6 +114,8 @@ a {
 }
 
 .link {
+    transition: opacity ease-out 0.3s;
+
     &.forgot {
         text-align: end;
         color: #F4ECEC75;
@@ -186,7 +188,7 @@ a {
     &__message-text {
         margin: 0;
         margin-right: 10px;
-        font-size: 15px;
+        font-size: 85%;
         color: #FFF;
     }
 }
@@ -229,5 +231,9 @@ a {
 
     .logo.img {
         width: 3%;
+    }
+
+    .error__message-text{
+        font-size: 60%;
     }
 }

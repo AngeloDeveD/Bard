@@ -24,6 +24,8 @@ export default function Login() {
 
     const [dis, setDis] = useState(true);
 
+    const [sendData, setSendData] = useState(false);
+
     //При изменеии email и пароля в formData меняются данные
     const handleInputChange = (e) => {
         setFormData(prevParams => ({
@@ -42,6 +44,7 @@ export default function Login() {
         e.preventDefault();
         setDis(true);
         setErrorMessage(null);
+        setSendData(true);
 
         try {
             const urlWithParams = new URL('http://172.24.80.146:8080/users/login');
@@ -75,6 +78,7 @@ export default function Login() {
             console.error(`Ошибка: ${error}`);
             //alert('Произошла ошибка при выполнении запроса.');
         } finally {
+            setSendData(false);
             setDis(false);
         }
     }
@@ -103,7 +107,7 @@ export default function Login() {
                         <input type="email" name="email" placeholder="Эл. почта" value={formData.email} onChange={handleInputChange} className="inputField Login"></input>
                         <input type="password" name="password" placeholder="Пароль" value={formData.password} onChange={handleInputChange} className="inputField Password"></input>
                         <div className="link forgot">
-                            <Link to="/recovery" className="link forgot">Забыли пароль ?</Link>
+                            <Link to="/recovery" className="link forgot" style={sendData ? {opacity: "0"} : {opacity: "1"}} disabled={sendData}>Забыли пароль ?</Link>
                         </div>
                         <div>
                             <input type="submit" value="Войти" className="inputField Button middle" disabled={dis}></input>
@@ -113,7 +117,7 @@ export default function Login() {
                 <div className="spacer min">
                 </div>
                 <div className="link registration">
-                    <Link to="/register" className="link registration">У вас нет аккаунта ? Зарегистрируйтесь!</Link>
+                    <Link to="/register" className="link registration" style={sendData ? {opacity: "0"} : {opacity: "1"}} disabled={sendData}>У вас нет аккаунта ? Зарегистрируйтесь!</Link>
                 </div>
             </div>
         </>

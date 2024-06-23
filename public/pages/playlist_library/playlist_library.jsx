@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import './playlist_library.scss';
 
 export default function Explore() {
+
+    const navigate = useNavigate();
 
     const userid = useSelector((state) => state.user.userId);
 
@@ -54,14 +56,14 @@ export default function Explore() {
                             {genres.map((genre, index) => {
                                 return (
                                     <button key={index} className="cont-genre">
-                                        <h1 className="titleGenre">{genre.genreID}</h1>
+                                        <h1 className="titleGenre" onClick={() => navigate(`/playlist?pl=${String(genre.genreID).toLowerCase()}`, {replace: {key: true}})}>{genre.genreID}</h1>
                                     </button>
                                 )
                             })}
                         </div>
                     </div>
                 </>
-                : <Navigate to={"/login"} />
+                : <Navigate to={"/login"} replace={true}/>
             }
         </>
     );

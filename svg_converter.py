@@ -2,8 +2,20 @@ def escape_svg(svg_content):
     return svg_content.replace('\"', '\\\"')
 
 svg_content = '''
-<svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M32.375 18.5C32.375 26.163 26.163 32.375 18.5 32.375C10.837 32.375 4.625 26.163 4.625 18.5C4.625 10.837 10.837 4.625 18.5 4.625C26.163 4.625 32.375 10.837 32.375 18.5ZM10.9191 24.6667L11.6262 23.9596L17.0858 18.5L11.6262 13.0404L10.9191 12.3333L12.3333 10.9191L13.0404 11.6262L18.5 17.0858L23.9596 11.6262L24.6667 10.9191L26.0809 12.3333L25.3738 13.0404L19.9142 18.5L25.3738 23.9596L26.0809 24.6667L24.6667 26.0809L23.9596 25.3738L18.5 19.9142L13.0404 25.3738L12.3333 26.0809L10.9191 24.6667Z" fill="#EB1414" fill-opacity="0.7"/>
+<svg width="250" height="250" viewBox="0 0 250 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 20C0 8.9543 8.9543 0 20 0H230C241.046 0 250 8.9543 250 20V230C250 241.046 241.046 250 230 250H20C8.9543 250 0 241.046 0 230V20Z" fill="url(#paint0_linear_2248_663)"/>
+<rect x="59" y="87" width="92" height="20" rx="10" fill="white"/>
+<rect x="59" y="117" width="70" height="20" rx="10" fill="white"/>
+<rect x="157" y="157" width="73" height="17" rx="8.5" transform="rotate(-90 157 157)" fill="white"/>
+<rect x="192" y="101" width="35" height="17" rx="8.5" transform="rotate(180 192 101)" fill="white"/>
+<rect x="59" y="147" width="62" height="20" rx="10" fill="white"/>
+<ellipse cx="149" cy="148.5" rx="25" ry="18.5" fill="white"/>
+<defs>
+<linearGradient id="paint0_linear_2248_663" x1="125" y1="0" x2="125" y2="250" gradientUnits="userSpaceOnUse">
+<stop offset="0.135" stop-color="#A53744"/>
+<stop offset="1" stop-color="#55527A"/>
+</linearGradient>
+</defs>
 </svg>
 '''
 

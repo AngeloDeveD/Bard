@@ -106,7 +106,7 @@ const ChangeEmail = () => {
     );
 }
 
-const ChangePassword = ({ user, closeSettings }) => {
+const ChangePassword = ({ closeSettings }) => {
     const [giveAccess, setGiveAccess] = useState(false);
     const [password, setPassword] = useState(
         {
@@ -164,7 +164,7 @@ const ChangePassword = ({ user, closeSettings }) => {
                                 value={password.confirmNewPassword}
                                 onChange={handleChangePassword}
                             />
-                            <button type="sumbit" className="changeEmail__main-content__button" disabled={!giveAccess}>Изменить</button>
+                            <button type="sumbit" className="inputField Button middle" disabled={!giveAccess}>Изменить</button>
                         </form>
                     </div>
                 </div>
@@ -468,7 +468,7 @@ export default function SettingPageMain() {
                             </>
                         }
                         {changeEmail && <ChangeEmail user={user} />}
-                        {changePassword && <ChangePassword user={user} closeSettings={handleSettingsClose} />}
+                        {changePassword && <ChangePassword closeSettings={handleSettingsClose} />}
                     </div>
                 </>
                 :

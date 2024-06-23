@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import ReactCrop, { centerCrop, convertToPixelCrop, makeAspectCrop } from "react-image-crop";
 import 'react-image-crop/src/ReactCrop.scss'
 import setCanvasPreview from "./setCanvasPreview";
@@ -14,6 +15,8 @@ const FileDropArea = ({ updateAvatar, closeModal, file, minWidth = MIN_DIMENSION
     const [imgSrc, setImgSrc] = useState("");
     const [crop, setCrop] = useState();
     const [error, setError] = useState("");
+
+    const userId = useSelector(state => state.user.userId);
 
     const onSelectFile = (file) => {
         const reader = new FileReader();
@@ -53,6 +56,24 @@ const FileDropArea = ({ updateAvatar, closeModal, file, minWidth = MIN_DIMENSION
         );
         const centeredCrop = centerCrop(crop, width, height);
         setCrop(centeredCrop);
+    }
+
+    const uploadImage = async (blob) => {
+        try{
+            const formData = new FormData();
+            formData.append('file', blob, 'image.png');
+
+            const response = await fetch(`http://172.24.80.146:8080/images/${minWidth === minHeight ? "users" : "user_header"}/${userId}/change-image`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if(!response.ok){
+                throw new Error("Ошибка при загрузке изображения!!");
+            }
+        } catch (error){
+            console.error('Ошибка при отправке изображения', error);
+        }
     }
 
     useEffect(() => {
@@ -95,7 +116,10 @@ const FileDropArea = ({ updateAvatar, closeModal, file, minWidth = MIN_DIMENSION
                                         imgRef.current.height
                                     )
                                 );
-                                const dataUrl = previewCanvasRef.current.toDataURL();
+                                const dataUrl = previewCanvasRef.current.toDataURL('image/png');
+                                previewCanvasRef.current.toBlob((blob) => {
+                                    uploadImage(blob);
+                                }, 'image/png');
                                 updateAvatar(dataUrl);
                                 closeModal();
                             }}

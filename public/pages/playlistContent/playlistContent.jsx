@@ -8,13 +8,13 @@ import PlayerIcons from '../player_icons/player_icons';
 import './playlistContent.scss';
 
 export default function PlaylistContent({ isAlb = false }) {
-    let [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [playlistId, setPlaylistId] = useState(null);
 
     const userid = useSelector((state) => state.user.userId);
     //const [userData, setUserData] = useState(null);
     const userData = useSelector((state) => state.user.userData);
 
-    const playlistId = searchParams.get('pl');
     const [urlData, setUrlData] = useState([]);
 
     const [activeSong, setActiveSong] = useState(null);
@@ -23,18 +23,61 @@ export default function PlaylistContent({ isAlb = false }) {
 
     const [editPlaylist, setEditPlaylist] = useState(false);
 
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [oldUrl, setOldUrl] = useState("");
+
     const [playlistParametrs, setPlaylistParametrs] = useState({
         playlistId: 0,
-        playlistTitle: "Понравившаяся музыка",
-        playlistAuthor: "Создано автоматически",
+        playlistTitle: "",
+        playlistAuthor: "",
+        icon_img: "",
         duration: "--:--",
         authorsPlaylist: false,
         autoCreated: false,
         playlistLock: false,
         playlistLiked: false,
-        isAlbum: isAlb,
-        playlistContent: []
+        //isAlbum: isAlb,
+        playlistContent: Array()
     });
+
+    const [genres, setGenres] = useState([
+        {
+            genre: "jpop",
+            title: "J-pop"
+        },
+        {
+            genre: "metal",
+            title: "Метал"
+        },
+        {
+            genre: "rock",
+            title: "Рок"
+        },
+        {
+            genre: "phonk",
+            title: "Фонк"
+        },
+        {
+            genre: "memphis",
+            title: "Мемфис"
+        },
+        {
+            genre: "hip-hop",
+            title: "Хип-хоп"
+        },
+        {
+            genre: "classical",
+            title: "Классическая"
+        },
+        {
+            genre: "hyperpop",
+            title: "Hyperpop"
+        },
+        {
+            genre: "electronic",
+            title: "Electronic"
+        }
+    ]);
 
     const [newPlaylistTitle, setNewPlaylistTitle] = useState("");
 
@@ -44,23 +87,35 @@ export default function PlaylistContent({ isAlb = false }) {
 
     const fetchDataPlaylist = async () => {
         setIsLoading(true);
+        let plId = playlistId;
         try {
-            const response = await fetch(`http://172.24.80.146:8080/${isAlb ? "albums" : "playlists"}/${playlistId}/profile`);
+            if (plId) {
+                const response = await fetch(`http://172.24.80.146:8080/playlists/${plId}/profile`);
 
-            if (!response.ok) {
-                setUrlData(null);
-                throw new Error('Что то пошло не так....');
+                if (!response.ok) {
+                    setPlaylistParametrs(prevParams => ({
+                        ...prevParams,
+                        playlistContent: []
+                    }));
+                    //setUrlData(null);
+                    throw new Error('Что то пошло не так.');
+                }
+                const result = await response.json();
+                //setUrlData(result);
             }
-            const result = await response.json();
-            setUrlData(result);
+            else {
+                throw new Error("id плейлиста равен null");
+            }
         } catch (error) {
-            setUrlData(null);
+            //setUrlData(null);
             console.error('Ошибка при получении данных:', error);
         }
         setIsLoading(false);
     }
 
     const fetchDataHyst = async () => {
+        let result = [];
+
         setIsLoading(true);
         try {
             const userFace = userData.face;
@@ -68,74 +123,146 @@ export default function PlaylistContent({ isAlb = false }) {
             const response = await fetch(`http://172.24.80.146:8080/users/${userFace.itemID}/listened`);
 
             if (!response.ok) {
-                setPlaylistParametrs(prevParams => ({
-                    ...prevParams,
-                    playlistContent: []
-                }));
-
                 throw new Error("Ошибка получения истории");
             }
 
             const dataHyst = await response.json();
 
-            setPlaylistParametrs(prevParams => ({
-                ...prevParams,
-                playlistContent: dataHyst
-            }));
+            result = [...dataHyst];
+
         } catch (error) {
             console.error("Ошибка отправки запроса!", error);
         }
         setIsLoading(false);
+        return result;
     }
 
+    const fetchDataGenre = async () => {
+        let result = [];
+
+        setIsLoading(true);
+        try {
+            const response = await fetch(`http://172.24.80.146:8080/music/recent?page=0&?genre=${playlistId}`);
+
+            if (!response.ok) {
+                throw new Error("Ошибка отправки данных на сервер!");
+            }
+
+            const data = await response.json();
+
+            result = [...data];
+
+        } catch (error) {
+            console.error("Ошибка запроса!!");
+        }
+
+        setIsLoading(false);
+
+        return result;
+    }
+
+    const fetchDataLiked = async () => {
+        let result = [];
+        setIsLoading(true);
+        try {
+            const response = await fetch(`http://172.24.80.146:8080/users/${userid}/profile`);
+
+            if (!response.ok) {
+                throw new Error("Ошибка отправки данных на сервер!");
+            }
+
+            const data = await response.json();
+
+            result = [...data.userActionsModel.likedMusic];
+
+        } catch (error) {
+            console.error("Ошибка запроса!!");
+        }
+
+        setIsLoading(false);
+
+        return result;
+    }
+
+    const checkGenreExists = (genreToCheck) => {
+        const exists = genres.some(genreObj => genreObj.genre === genreToCheck);
+        return !!exists;
+    };
+
     useEffect(() => {
-        if (playlistId !== "hyst" && playlistId !== "lK") {
-            fetchDataPlaylist();
+        setPlaylistParametrs(prevParams => ({
+            ...prevParams,
+            playlistContent: []
+        }));
+        setPlaylistId(searchParams.get('pl'));
+        let isPlaylistGenre = checkGenreExists(playlistId);
+
+        if (!!playlistId) {
+            //console.log(checkGenreExists(playlistId));
+            if (playlistId !== "hyst" && playlistId !== "lK" && !isPlaylistGenre) {
+                fetchDataPlaylist();
+            }
+            else {
+                switch (playlistId) {
+                    case "lK":
+                        {
+                            setPlaylistParametrs(prevParams => ({
+                                ...prevParams,
+                                playlistTitle: "Понравившаяся музыка",
+                                playlistAuthor: "Создано автоматически",
+                                icon_img: "playlist-liked-icon",
+                                authorsPlaylist: false,
+                                autoCreated: true,
+                                playlistContent: fetchDataLiked()
+                            }));
+                            break;
+                        }
+                    case "hyst":
+                        {
+                            setPlaylistParametrs(prevParams => ({
+                                ...prevParams,
+                                playlistTitle: "История прослушивания",
+                                playlistAuthor: "Создано автоматически",
+                                icon_img: "playlist-history-icon",
+                                authorsPlaylist: false,
+                                autoCreated: true,
+                                playlistContent: fetchDataHyst()
+                            }));
+                            break;
+                        }
+                    default:
+                        {
+                            if (isPlaylistGenre) {
+                                setPlaylistParametrs(prevParams => ({
+                                    ...prevParams,
+                                    playlistTitle: genres.map((genre, index) => {
+                                        if (genre.genre === playlistId) {
+                                            setPlaylistParametrs(prevParams => ({
+                                                ...prevParams,
+                                                playlistTitle: genre.title,
+                                                playlistAuthor: "Создано автоматически",
+                                                icon_img: `playlist-${playlistId}-icon`,
+                                                authorsPlaylist: false,
+                                                autoCreated: true,
+                                                playlistContent: fetchDataGenre()
+                                            }));
+                                            setIsLoading(false);
+                                        }
+                                    })
+                                }));
+                            }
+                            else {
+                                fetchDataPlaylist();
+                            }
+                            break;
+                        }
+
+                }
+                setUrlData(playlistParametrs.playlistContent);
+            }
         }
 
-        switch (playlistId) {
-            case "lK":
-                if (userData && userData.userActionsModel) {
-                    setIsLoading(true);
-                    console.log("hyst: ", userData && userData.userActionsModel);
-                    setPlaylistParametrs(prevParams => ({
-                        ...prevParams,
-                        playlistTitle: "Понравившаяся музыка",
-                        playlistAuthor: "Создано автоматически",
-                        authorsPlaylist: false,
-                        autoCreated: true,
-                        playlistContent: userData.userActionsModel.likedMusic
-                    }));
-                }
-                setIsLoading(false);
-                break;
-
-            case "hyst":
-                if (userData && userData.userActionsModel) {
-                    setIsLoading(true);
-                    console.log("hyst: ", userData && userData.userActionsModel)
-                    setPlaylistParametrs(prevParams => ({
-                        ...prevParams,
-                        playlistTitle: "История прослушивания",
-                        playlistAuthor: "Создано автоматически",
-                        authorsPlaylist: false,
-                        autoCreated: true
-                    }));
-                    fetchDataHyst();
-                }
-                setIsLoading(false);
-                break;
-
-            default:
-                if (userData && userData.userActionsModel) {
-                    setIsLoading(true);
-                    fetchDataPlaylist();
-                }
-                setIsLoading(false);
-                break;
-        }
-
-    }, [playlistId, userData]);
+    }, [playlistId, searchParams]);
 
     if (isLoading) {
         return (
@@ -188,19 +315,12 @@ export default function PlaylistContent({ isAlb = false }) {
 
     return (
         <>
-            {urlData !== null && userData && userData.userActionsModel ?
+            {!isLoading && userData && userData.userActionsModel ?
                 <>
                     <div className="user-playlist__all-containers">
                         <div className='user-playlist__info-container'>
                             <div className='user-playlist__image'>
-                                {playlistId === "lK" ?
-                                    <PlayerIcons icon_name={"playlist-liked-icon"} classname={'playlist-image'} />
-                                    :
-                                    playlistId === "hyst" ?
-                                        <PlayerIcons icon_name={"playlist-history-icon"} classname={'playlist-image'} />
-                                        :
-                                        <img className='playlist-image' src="https://cdni.iconscout.com/illustration/premium/thumb/404-7304110-5974976.png?f=webp" style={{ backgroundColor: "#6CE0AF" }} />
-                                }
+                                <PlayerIcons icon_name={playlistParametrs.icon_img} classname={'playlist-image'} />
                             </div>
                             <div className='user-playlist__info__container'>
                                 <div className='user-playlist__param'>
@@ -258,19 +378,20 @@ export default function PlaylistContent({ isAlb = false }) {
                                 }
                             </div>
                         </div>
-                        <div className='user-playlist__songs-container' style={urlData.length !== 0 ? { marginLeft: "50px" } : {}}>
-                            {urlData.length !== 0 ?
-                                urlData.map((song, index) => {
-                                    const isActive = song.id === activeSong;
+                        <div className='user-playlist__songs-container' style={playlistParametrs.playlistContent.length !== 0 ? { marginLeft: "50px" } : {}}>
+                            {urlData && urlData.length !== 0 ?
+                                urlData?.map((song, index) => {
+                                    const isActive = song.itemID === activeSong;
                                     const buttonClass = isActive ? 'active' : '';
+                                    //console.log("song-item", song.itemID);
                                     return (
-                                        <button key={index} className={`user-playlist-button__container ${buttonClass}`} onClick={() => playSong(song.id)}>
-                                            <img className='user-playlist-button__song-icon' src={song.img}></img>
+                                        <button key={song.itemID} className={`user-playlist-button__container ${buttonClass}`} onClick={() => playSong(song.itemID)}>
+                                            <img className='user-playlist-button__song-icon' src={`http://172.24.80.146/images/${song.coverID}.webp`}></img>
                                             <div className='user-playlist-button__incontainer'>
-                                                <h3 className='user-playlist-button alltext song-title_pl'>{song.song_name}</h3>
+                                                <h3 className='user-playlist-button alltext song-title_pl'>{song.title}</h3>
                                             </div>
                                             <div className='user-playlist-button__incontainer'>
-                                                <h3 className='user-playlist-button alltext song-author_pl'>{song.Author}</h3>
+                                                <h3 className='user-playlist-button alltext song-author_pl'>{song.username}</h3>
                                             </div>
                                             <div className='user-playlist-button__incontainer'>
                                                 <h3 className='user-playlist-button alltext song-time_pl'>{`00:00`}</h3>

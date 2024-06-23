@@ -113,7 +113,7 @@ export default function MainPage() {
             case '/explore':
                 return <Explore />;
             case '/playlist':
-                return <PlaylistContent isAlb={false}/>;
+                return <PlaylistContent />;
             case '/album':
                 return <PlaylistContent isAlb={true}/>;
             case '/profile':
@@ -155,7 +155,7 @@ export default function MainPage() {
                             <SearchPanel />
                             <div className="main-backdrop" style={panelHeight}>
                                 <div className="cont">
-                                    <Suspense fallback={<ProgressBar progress={progress} />}>
+                                    <Suspense key={location.pathname} fallback={<ProgressBar progress={progress} />}>
                                         {renderPanel()}
                                     </Suspense>
                                 </div>

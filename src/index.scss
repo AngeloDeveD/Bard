@@ -19,6 +19,7 @@ $main-panel-bg-color: $main-color; //Цвет компонента контен�
 $player-panel-bg-color: $main-color; //Цвет компонента плеера
 $add-to-playlist-panel-bg-color: $main-color; //Цвет компонента добавления трека в плейлист
 $profile-main-panel: $main-color; //Цвет компонента кнопок ну которые те самые...
+$change-email-password-bg-color: $main-color;
 
 $profile-main-button-panel-text-enable: #FFFFFF; //Цвет текста включённой кнопки у того самого компонента.... (по умолчанию: #FFFFFF)
 $profile-main-button-panel-text-disable: if(global-variable-exists('custom-profile-main-button-panel-text-disable'), $custom-profile-main-button-panel-text-disable, gray); //Цвет текста выключённой кнопки у того самого компонента.... (по умолчанию: gray)
@@ -103,6 +104,10 @@ body{
     &.Disable{
         color: $profile-main-button-panel-text-disable;
     }
+}
+
+.changeEmail__container{
+    background-color: $change-email-password-bg-color;
 }
 
 // :focus{
