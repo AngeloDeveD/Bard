@@ -12,20 +12,20 @@ export default function ProfilePage({ isUserProfile = true }) {
 
     const navigate = useNavigate();
 
-    const [userID, setUserID] = useState(userData.face.itemID);
-    const [userIco, setUserIco] = useState(`http://172.24.80.146/images/${userData.face.coverID}.webp`);
-    const [userBackground, setUserBackground] = useState(`http://172.24.80.146/images/${userData.headerID}.webp`); //
-    const [userName, setUserName] = useState(userData.face.username);
+    const [userID, setUserID] = useState(0);
+    const [userIco, setUserIco] = useState('');
+    const [userBackground, setUserBackground] = useState(''); //
+    const [userName, setUserName] = useState('');
     const [subscribers, setSubscribers] = useState(0);
-    const [subscribtions, setSubscribtions] = useState(userData.subscribed);
-    const [description, setDescription] = useState(userData.tale);
+    const [subscribtions, setSubscribtions] = useState(0);
+    const [description, setDescription] = useState('');
     const [mouseEnter, setMouseEnter] = useState(false);
 
     const [subscribed, setSubscribed] = useState(false);
 
     const [mainBackdropWidth, setMainBackdropWidth] = useState(0);
 
-    const userIdProfile = searchParams.get('pfID');
+    const userIdProfile = searchParams.get('pfid');
 
     const [authors, setAuthors] = useState([
         {
@@ -99,6 +99,32 @@ export default function ProfilePage({ isUserProfile = true }) {
         setMouseEnter(false)
     }
 
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(`http://172.24.80.146:8080/users/${userIdProfile}/profile`);
+
+            if (!response.ok) {
+                throw new Error("Ошибка отправки запроса!");
+            }
+
+            if (response.status === 404) {
+                throw new Error("Пользователь не найден!");
+            }
+
+            const data = await response.json();
+
+            setUserID(data.face.itemID);
+            setUserIco(`http://172.24.80.146/images/${data.face.coverID}.webp`);
+            setUserBackground(`http://172.24.80.146/images/${data.headerID}.webp`);
+            setUserName(data.face.username);
+            setSubscribtions(data.subscribed);
+            setDescription(data.tale);
+        } catch (error) {
+            console.error("Ошибка получения данных.", error);
+            navigate("/404");
+        }
+    };
+
     useEffect(() => {
         console.log(`profilePage: ${userID}`);
 
@@ -106,7 +132,21 @@ export default function ProfilePage({ isUserProfile = true }) {
             if (userIdProfile === userID) {
                 navigate('/profile');
             }
+            else {
+                fetchUserData();
+            }
         }
+        else{
+            setUserID(userData.face.itemID);
+            setUserIco(`http://172.24.80.146/images/${userData.face.coverID}.webp`);
+            setUserBackground(`http://172.24.80.146/images/${userData.headerID}.webp`);
+            setUserName(userData.face.username);
+            setSubscribtions(userData.subscribed);
+            setDescription(userData.tale);
+        }
+
+        console.log(isUserProfile);
+        //console.log(user)
 
         const handleResize = () => {
             const cont = document.querySelector('.main-backdrop');

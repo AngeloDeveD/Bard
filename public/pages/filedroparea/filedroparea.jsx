@@ -116,7 +116,7 @@ const FileDropArea = ({ updateAvatar, closeModal, file, minWidth = MIN_DIMENSION
                         aspect={aspect}
                         minWidth={minWidth}
                         minHeight={minHeight}
-                        style={{ maxWidth: "80%" }}
+                        style={{ maxWidth: "80%", height: "auto" ,maxHeight: "80vh" }}
                     >
                         <img
                             ref={imgRef}

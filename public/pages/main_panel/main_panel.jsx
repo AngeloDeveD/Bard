@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { setTrackId } from "../../../src/actions/userActions";
@@ -26,7 +26,7 @@ const Playlist_div = ({ playlist }) => {
                             <img src={`http://172.24.80.146/images/${pl.coverID}.webp`} className="ContainerImage" alt={pl.song_name}></img>
                         </button>
                         <p className="trackInfo">{pl.title} &bull;
-                            <a href="" className="trackInfo link">{pl.username}</a> &bull;
+                            <Link to={`/user?pfid=${pl.authorID}`} className="trackInfo link">{pl.username}</Link> &bull;
                             {pl.genre}
                             {/* <a href="" className="trackInfo link">{pl.album}</a> &bull; 
                             {pl.year} */}
