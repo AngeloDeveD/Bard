@@ -1,8 +1,9 @@
 import { useRef, useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ReactCrop, { centerCrop, convertToPixelCrop, makeAspectCrop } from "react-image-crop";
 import 'react-image-crop/src/ReactCrop.scss'
 import setCanvasPreview from "./setCanvasPreview";
+import { setUser } from "../../../src/actions/userActions";
 
 const ASPECT_RATIO = 1;
 const MIN_DIMENSION = 98;
@@ -10,6 +11,8 @@ const MIN_DIMENSION = 98;
 import './filedroparea.scss';
 
 const FileDropArea = ({ updateAvatar, closeModal, file, minWidth = MIN_DIMENSION, minHeight = MIN_DIMENSION, aspect = 1 }) => {
+    const dispatch = useDispatch();
+
     const imgRef = useRef(null);
     const previewCanvasRef = useRef(null);
     const [imgSrc, setImgSrc] = useState("");
@@ -17,6 +20,7 @@ const FileDropArea = ({ updateAvatar, closeModal, file, minWidth = MIN_DIMENSION
     const [error, setError] = useState("");
 
     const userId = useSelector(state => state.user.userId);
+    const userData = useSelector(state => state.user.userData);
 
     const onSelectFile = (file) => {
         const reader = new FileReader();
@@ -59,11 +63,13 @@ const FileDropArea = ({ updateAvatar, closeModal, file, minWidth = MIN_DIMENSION
     }
 
     const uploadImage = async (blob) => {
+        const type = minWidth === minHeight ? "users" : "user_header"
+
         try{
             const formData = new FormData();
-            formData.append('file', blob, 'image.png');
+            formData.append('imageFile', blob, 'image.png');
 
-            const response = await fetch(`http://172.24.80.146:8080/images/${minWidth === minHeight ? "users" : "user_header"}/${userId}/change-image`, {
+            const response = await fetch(`http://172.24.80.146:8080/images/${type}/${userId}/change-image`, {
                 method: 'POST',
                 body: formData,
             });
@@ -71,10 +77,27 @@ const FileDropArea = ({ updateAvatar, closeModal, file, minWidth = MIN_DIMENSION
             if(!response.ok){
                 throw new Error("Ошибка при загрузке изображения!!");
             }
+
+            const data = await response.json();
+
+            UpdateInfo(type, data);
+            
         } catch (error){
             console.error('Ошибка при отправке изображения', error);
         }
     }
+
+    const UpdateInfo = (infoType = "users", id) =>{
+        const newData = {
+            ...userData,
+            face: {
+                ...userData.face,
+                coverID: infoType === "users" ? id : userData.face.coverID,
+            },
+            headerID: infoType === "user_header" ? id : userData.headerID
+        };
+        dispatch(setUser(newData));
+    };
 
     useEffect(() => {
         file && onSelectFile(file);
