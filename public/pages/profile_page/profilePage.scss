@@ -171,8 +171,9 @@
         $description-font-size: 14px;
 
         &.d-container {
-            width: max-content;
+            width: 80%;
             margin-left: 10px;
+            max-width: 80vh;
         }
 
         &.d-text {
