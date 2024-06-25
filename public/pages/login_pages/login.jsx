@@ -21,10 +21,11 @@ export default function Login() {
     const [formData, setFormData] = useState({ email: '', password: '' });
 
     const [errorMessage, setErrorMessage] = useState(null); // Создаем состояние для хранения ответа сервера
-
     const [dis, setDis] = useState(true);
 
     const [sendData, setSendData] = useState(false);
+
+    const [hidePanel, setHidePanel] = useState(false);
 
     //При изменеии email и пароля в formData меняются данные
     const handleInputChange = (e) => {
@@ -70,7 +71,10 @@ export default function Login() {
                 setErrorMessage(null);
                 dispatch(setUserId(data));
                 dispatch(setUserEmail(formData.email));
-                navigate('/');
+                setHidePanel(true);
+                setTimeout(() => {
+                    navigate('/');
+                }, 1500);
             }
         } catch (error) {
             if (!error.message.includes('Сетевой ответ был не ok.')) {
@@ -93,7 +97,7 @@ export default function Login() {
 
     return (
         <>
-            <div className="container">
+            <div className="container" style={hidePanel ? {opacity: "0"} : {opacity: "1"}}>
                 <div className="logo">
                     <img src={myImage}></img>
                     <h1 className="title-big">OtoWave</h1>
@@ -111,7 +115,14 @@ export default function Login() {
                         <input type="email" name="email" placeholder="Эл. почта" value={formData.email} onChange={handleInputChange} className="inputField Login"></input>
                         <input type="password" name="password" placeholder="Пароль" value={formData.password} onChange={handleInputChange} className="inputField Password"></input>
                         <div className="link forgot">
-                            <Link to="/recovery" className="link forgot" style={sendData ? {opacity: "0", cursor: "default"} : {opacity: "1"}} disabled={sendData}>Забыли пароль ?</Link>
+                            <Link 
+                                to="/recovery" 
+                                className="link forgot" 
+                                style={sendData ? {opacity: "0", cursor: "default"} : {opacity: "1"}}
+                                onClick={() => setHidePanel(true)}
+                                disabled={sendData}>
+                                    Забыли пароль ?
+                            </Link>
                         </div>
                         <div>
                             <input type="submit" value="Войти" className="inputField Button middle" disabled={dis}></input>
@@ -121,7 +132,14 @@ export default function Login() {
                 <div className="spacer min">
                 </div>
                 <div className="link registration">
-                    <Link to="/register" className="link registration" style={sendData ? {opacity: "0", cursor: "default"} : {opacity: "1"}} disabled={sendData}>У вас нет аккаунта ? Зарегистрируйтесь!</Link>
+                    <Link 
+                        to="/register" 
+                        className="link registration" 
+                        style={sendData ? {opacity: "0", cursor: "default"} : {opacity: "1"}} 
+                        disabled={sendData} 
+                        onClick={() => setHidePanel(true)}>
+                            У вас нет аккаунта ? Зарегистрируйтесь!
+                    </Link>
                 </div>
             </div>
         </>

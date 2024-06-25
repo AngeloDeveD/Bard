@@ -19,6 +19,8 @@ export default function SignUp() {
     const [mailAccess, setMailAccess] = useState(false);
     const [allClear, setAllClear] = useState(false);
 
+    const [hidePanel, setHidePanel] = useState(false);
+
     //Создание формы для будущей отправки на сервер путём POST запроса.
     const [formData, setFormData] = useState({ nickname: '', email: '', password: '' });
 
@@ -133,7 +135,7 @@ export default function SignUp() {
 
     return (
         <>
-            <div className="container">
+            <div className="container" style={hidePanel ? {opacity: "0"} : {opacity: "1"}}>
                 <div className="logo">
                     <img src={myImage}></img>
                     <h1 className="title-big">OtoWave</h1>
@@ -147,7 +149,7 @@ export default function SignUp() {
                         <input type="password" placeholder="Пароль" className={`inputField Login ${ message && password !== confirmPassword ? "Red" : ""}`} value={password} onChange={handlePasswordChange}></input>
                         <input type="password" placeholder="Повторить пароль" className={`inputField Password ${password !== confirmPassword ? "Red" : ""}`} value={confirmPassword} onChange={handleConfirmPasswordChange}></input>
                         <div className="link forgot">
-                            <Link to="/login" className="link forgot">Войти в аккаунт</Link>
+                            <Link to="/login" className="link forgot" onClick={() => setHidePanel(true)}>Войти в аккаунт</Link>
                         </div>
                         <div style={{ paddingTop: '5%' }}>
                             <input type="submit" value="Создать аккаунт" className="inputField Button middle" disabled={!allClear || dis} style={{ width: '56%' }}></input>

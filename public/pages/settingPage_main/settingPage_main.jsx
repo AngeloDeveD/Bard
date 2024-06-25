@@ -243,27 +243,44 @@ export default function SettingPageMain() {
         setNewNickname(e.target.value);
     }
 
+    const UpdateInfo = (nickname) => {
+        const newData = {
+            ...userData,
+            face: {
+                ...userData.face,
+                username: nickname
+            }
+        };
+        dispatch(setUser(newData));
+        setUserName(nickname);
+    };
+
+    const encodeQueryParameters = (params) => {
+        return Object.entries(params).map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join('&');
+    }
+
     const handleSubmitNewNickname = (e) => {
         e.preventDefault();
 
+        const sendData = {newName: newNickname};
+
+        const urlWithParams = new URL(`http://172.24.80.146:8080/users/${userData.face.itemID}/change-name`);
+        urlWithParams.search = encodeQueryParameters(sendData);
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://172.24.80.146:8080/users/${userData.face.itemID}/change-name?newName=${newNickname}`, {
+                const response = await fetch(urlWithParams, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
-                    }
+                    },
+                    body: JSON.stringify(sendData)
                 });
 
                 if (!response.ok) {
                     throw new Error("Ошибка получения данных от сервера!!");
                 }
 
-                dispatch(setUser(prevParams => ({
-                    ...prevParams,
-                    //face.username: ""
-                })));
-
+                UpdateInfo(newNickname);
                 //const data = await response.json()
 
             } catch (error) {
@@ -273,7 +290,7 @@ export default function SettingPageMain() {
 
         fetchData();
 
-        console.log(user);
+        //console.log(user);
         setChangeNickname(false);
         setSettingsActive(false);
     }

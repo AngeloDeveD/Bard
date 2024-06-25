@@ -31,7 +31,7 @@ $home-panel-buttons-pressed: rgba(#0000, $alpha: 0.0); //Цвет ненажат
 
 $link-404-button: if(global-variable-exists('custom-404-link-button'), $custom-404-link-button, #8a8883); //Цвет ссылки на странице 404(по умолчанию: #8a8883)
 
-body{
+body {
     background: $background-color;
 }
 
@@ -67,46 +67,46 @@ body{
     backdrop-filter: blur($blur-panels);
 }
 
-.add-pl{
+.add-pl {
     background-color: $add-to-playlist-panel-bg-color;
     backdrop-filter: blur($blur-panels);
 }
 
-.container{
+.container {
     background-color: $login-page-bg-color;
     backdrop-filter: blur($blur-panels);
 }
 
-.Profile{
+.Profile {
     background-color: $profile-main-panel;
     backdrop-filter: blur($blur-panels);
 }
 
-.buttons{
-    &.pressed{
+.buttons {
+    &.pressed {
         background-color: $home-panel-buttons-pressed;
     }
 
-    &.unpressed{
+    &.unpressed {
         background-color: $home-panel-buttons-unpressed;
     }
 }
 
-.LinkDis{
+.LinkDis {
     color: $link-404-button;
 }
 
-.Profile-Button{
-	&.Enable{
+.Profile-Button {
+    &.Enable {
         color: $profile-main-button-panel-text-enable;
     }
 
-    &.Disable{
+    &.Disable {
         color: $profile-main-button-panel-text-disable;
     }
 }
 
-.changeEmail__container{
+.changeEmail__container {
     background-color: $change-email-password-bg-color;
 }
 
@@ -114,10 +114,22 @@ body{
 //     outline: 2px solid $selection-color;
 // }
 
-.panel_inside{
-    &.search_panel{
-        &.searchInput{
-            &:focus{
+.profile {
+    &.p-description {
+        &.d-text {
+            &.dd-edit-desc {
+                &:focus {
+                    outline: 1px solid #908b8b;
+                }
+            }
+        }
+    }
+}
+
+.panel_inside {
+    &.search_panel {
+        &.searchInput {
+            &:focus {
                 outline: 1px solid #908b8b;
             }
         }

@@ -45,6 +45,8 @@ a {
     width: 80%;
     margin: 5% auto;
     min-height: 100vh;
+
+    transition: ease-in-out opacity 0.3s;
 }
 
 .inputField {
@@ -183,6 +185,7 @@ a {
     &__message-icon {
         height: 37px;
         margin-left: 15px;
+        align-content: center;
     }
 
     &__message-text {

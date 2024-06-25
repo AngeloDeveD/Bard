@@ -16,7 +16,7 @@
     color: #fff;
     box-shadow: 0px 0px 12px black;
     transition: opacity 0.1s;
-    
+
     &.showed {
         opacity: 1;
         pointer-events: auto;
@@ -28,9 +28,9 @@
     }
 }
 
-.pl{
+.pl {
     $line-color: #FFFFFF;
-    
+
     font-size: 10px;
     width: 90%;
     color: $line-color;
@@ -39,21 +39,30 @@
     border-width: 3px;
     border-image: radial-gradient($line-color, rgba($color: $line-color, $alpha: 0.0)) 1;
 
-    &.pl-title{
+    &.pl-title {
         border-bottom: 2px solid $line-color;
         margin-bottom: 7px;
-        & h2{
+
+        & h2 {
             margin: 15px;
             margin-top: 23px;
         }
     }
 
-    &.pl-create-pl{
+    &.pl-create-pl {
         border-top: 2px solid $line-color;
+        position: fixed;
+        bottom: 0;
     }
 
-    &.create-pl-button{
+    &.create-pl-button {
         border-radius: 15px;
+        font-size: 35px;
+        width: auto;
+        height: auto;
+        align-content: center;
+        background: transparent;
+        cursor: pointer;
     }
 }
 
@@ -84,7 +93,7 @@
 }
 
 .no-pl {
-    padding: 35px;
+    padding-block: 50px;
     justify-content: center;
     font-size: 15px;
     color: #fff;
@@ -93,5 +102,70 @@
 
 .pl-info {
     overflow-y: scroll;
-    z-index: 1000;
+    //z-index: 1000;
+}
+
+.editor-playlist {
+    &__background {
+        position: fixed;
+        bottom: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        align-content: center;
+        background-color: rgba($color: #000000, $alpha: 0.7);
+    }
+
+    &__container {
+        width: 85%;
+        height: max-content;
+        background-color: #333;
+        border-radius: 15px;
+        margin-inline: auto;
+        padding-top: 10px;
+        border-color: white;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    &__text {
+        font-size: 15px;
+        color: #FFFFFF;
+        text-align: center;
+        width: 100%;
+        margin-block: 16px;
+    }
+
+    &__form {
+        width: 100%;
+    }
+
+    &__input {
+        background-color: transparent;
+        color: white;
+        border-radius: 7px;
+        border-style: solid;
+        margin: auto;
+        font-size: 12px;
+        text-align: center;
+        padding-block: 5px;
+        width: 23vh;
+    }
+
+    &__container-buttons {
+        display: flex;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    &__buttons {
+        width: 50%;
+        border-style: solid;
+        border-width: 1px;
+        height: 25px;
+        background-color: transparent;
+        color: white;
+        border-color: white;
+        cursor: pointer;
+    }
 }

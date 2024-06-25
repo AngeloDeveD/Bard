@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import PlayerIcons from "../player_icons/player_icons";
 
 import './profilePage.scss';
 
@@ -11,6 +12,8 @@ export default function ProfilePage({ isUserProfile = true }) {
     const userData = useSelector(state => state.user.userData);
 
     const navigate = useNavigate();
+
+    const [isEdit, setIsEdit] = useState(false);
 
     const [userID, setUserID] = useState(0);
     const [userIco, setUserIco] = useState('');
@@ -24,6 +27,8 @@ export default function ProfilePage({ isUserProfile = true }) {
     const [subscribed, setSubscribed] = useState(false);
 
     const [mainBackdropWidth, setMainBackdropWidth] = useState(0);
+
+    const [newDescription, setNewDescription] = useState(description);
 
     const userIdProfile = searchParams.get('pfid');
 
@@ -99,6 +104,48 @@ export default function ProfilePage({ isUserProfile = true }) {
         setMouseEnter(false)
     }
 
+    const toggleEditDescription = () => {
+        setIsEdit(true);
+    }
+
+    const encodeQueryParameters = (params) => {
+        return Object.entries(params).map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join('&');
+    }
+
+    const handleSumbitNewDescription = (e) => {
+        e.preventDefault();
+
+        const fetchData = async () => {
+            const sendData = { newTale: newDescription };
+
+            const changeDescriptionUrl = new URL(`http://172.24.80.146:8080/users/${userID}/change-tale`);
+            changeDescriptionUrl.search = encodeQueryParameters(sendData);
+
+            try {
+                const response = await fetch(changeDescriptionUrl, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(sendData)
+                });
+
+                if (!response.ok) {
+                    throw new Error("Ошибка получения данных от сервера!!");
+                }
+
+                setDescription(newDescription);
+            } catch (error) {
+                console.error("Ошибка обработки данных", error);
+            }
+        }
+
+        fetchData();
+
+        setIsEdit(false);
+
+    };
+
     const fetchUserData = async () => {
         try {
             const response = await fetch(`http://172.24.80.146:8080/users/${userIdProfile}/profile`);
@@ -136,13 +183,14 @@ export default function ProfilePage({ isUserProfile = true }) {
                 fetchUserData();
             }
         }
-        else{
+        else {
             setUserID(userData.face.itemID);
             setUserIco(`http://172.24.80.146/images/${userData.face.coverID}.webp`);
             setUserBackground(`http://172.24.80.146/images/${userData.headerID}.webp`);
             setUserName(userData.face.username);
             setSubscribtions(userData.subscribed);
             setDescription(userData.tale);
+            setNewDescription(description);
         }
 
         console.log(isUserProfile);
@@ -200,14 +248,40 @@ export default function ProfilePage({ isUserProfile = true }) {
                             <a className="profile p-links l-link" href="">Подписок: {subscribtions}</a>
                         </div>
                         <div className="profile p-description d-container">
-                            <a className="profile p-description d-text" onClick={() => console.log("Clicked")}>
-                                {description}
-                            </a>
+                            {!isEdit ?
+                                <>
+                                    <a className="profile p-description d-text" onClick={() => console.log("Clicked")}>
+                                        {description}
+                                    </a>
+                                    {isUserProfile &&
+                                        <>
+                                            <button className="profile p-description d-container__change-description" onClick={toggleEditDescription}>
+                                                <PlayerIcons icon_name={"settings_edit"} />
+                                            </button>
+                                        </>
+                                    }
+                                </> :
+                                <>
+                                    <form onSubmit={handleSumbitNewDescription} className="profile p-description d-text__form">
+                                        <input
+                                            type="text"
+                                            name="description"
+                                            onChange={(e) => setNewDescription(e.target.value)}
+                                            value={newDescription}
+                                            placeholder="Введите описание"
+                                            className="profile p-description d-text dd-edit-desc"
+                                        />
+                                        <button type="submit" className="profile p-description d-container__change-description">
+                                            <PlayerIcons icon_name={"settings_apply"} classname="profile p-description d-container__change-description__button"/>
+                                        </button>
+                                    </form>
+                                </>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="profile p-authors a-main-container">
+            <div className="profile p-authors a-main-container" style={{ opacity: "1" }}>
                 <h2 className="profile p-authors a-main-text">Часто прослушиваемые артисты</h2>
                 <div className="profile p-authors a-author-button">
                     {authors.map((author, index) => {

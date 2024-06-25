@@ -78,7 +78,7 @@ const MainForget = ({ onPasswordReset }) => {
     );
 }
 
-const LastForget = () => {
+const LastForget = (setHidePanel) => {
     return (
         <>
             <div className="spacer min">
@@ -89,8 +89,8 @@ const LastForget = () => {
             <div className="spacer mid">
             </div>
             <div className="links">
-                <Link to="/register" className="links">Зарегистрироваться</Link>
-                <Link to="/login" className="links">Войти</Link>
+                <Link to="/register" className="links" onClick={() => setHidePanel(true)}>Зарегистрироваться</Link>
+                <Link to="/login" className="links" onClick={() => setHidePanel(true)}>Войти</Link>
             </div>
         </>
     )
@@ -99,18 +99,20 @@ const LastForget = () => {
 export default function ForgotPassoword() {
     const [isResettingPassword, setIsResettingPassword] = useState(false);
 
+    const [hidePanel, setHidePanel] = useState(false);
+
     const handlePasswordReset = () => {
         setIsResettingPassword(true);
     }
 
     return (
         <>
-            <div className="container">
+            <div className="container" style={hidePanel ? {opacity: "0"} : {opacity: "1"}}>
                 <div className="logo">
                     <img src={myImage}></img>
                     <h1 className="title-big">OtoWave</h1>
                 </div>
-                {isResettingPassword ? <LastForget /> : <MainForget onPasswordReset={handlePasswordReset} />}
+                {isResettingPassword ? <LastForget setHidePanel={setHidePanel}/> : <MainForget onPasswordReset={handlePasswordReset} />}
             </div>
         </>
     );

@@ -171,9 +171,25 @@
         $description-font-size: 14px;
 
         &.d-container {
-            width: 80%;
+            //width: 80%;
             margin-left: 10px;
             max-width: 80vh;
+            display: flex;
+
+            &__change-description {
+                width: 35px;
+                height: 30px;
+                background-color: transparent;
+                border-style: solid;
+                border-color: transparent;
+                cursor: pointer;
+                border-left-color: white;
+                border-width: 1px;
+
+                &__button {
+                    height: 20px;
+                }
+            }
         }
 
         &.d-text {
@@ -184,8 +200,33 @@
 
             cursor: pointer;
 
+            width: 60%;
+            display: block;
+            align-content: center;
+
             &:hover {
-                text-decoration: underline;
+                //text-decoration: underline;
+            }
+
+            &.dd-edit-desc {
+                width: 100%;
+                border-radius: 7px;
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+                border-style: solid;
+                border-color: rgba($color: #ffffff, $alpha: 0.0);
+                //border-width: 1px;
+                background-color: rgba($color: #000000, $alpha: 0.0);
+                color: rgba($color: #ffffff, $alpha: 1.0);
+            }
+
+            &__form {
+                display: flex;
+                justify-content: space-between;
+                border-radius: 7px;
+                border-style: solid;
+                border-color: white;
+                border-width: 1px;
             }
         }
     }
