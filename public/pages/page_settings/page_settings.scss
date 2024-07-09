@@ -1,3 +1,5 @@
+//@import "../../../src/index.scss";
+
 .Profile {
     flex-direction: column;
     display: flex;
@@ -6,7 +8,8 @@
     right: 8px;
     width: 200px;
     z-index: 1000;
-    //background-color: #333;
+    background-color: var(--profile-main-panel);
+    backdrop-filter: blur(var(--blur-panels));
     border-radius: 15px;
     border-style: none;
     box-shadow: 0px 0px 12px black;
@@ -30,12 +33,12 @@
     background-color: rgba($color: #fff, $alpha: 0.0);
 
     &.Enable {
-        //color: #FFFFFF;
+        color: var(--profile-main-button-panel-text-enable);
         cursor: pointer;
     }
 
     &.Disable {
-        //color: gray;
+        color: var(--profile-main-button-panel-text-disable);
     }
 
     &.Upper {

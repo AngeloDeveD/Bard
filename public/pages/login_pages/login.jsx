@@ -142,6 +142,7 @@ export default function Login() {
                     </Link>
                 </div>
             </div>
+            {sendData && <div className="Container_start-loading"></div>}
         </>
     );
 }

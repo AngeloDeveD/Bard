@@ -1,3 +1,5 @@
+//@import "../../../src/index.scss";
+
 .ErrorMenu {
     flex-direction: column;
     display: flex;
@@ -10,6 +12,6 @@
 .LinkDis {
     margin-top: 40px;
     text-decoration: none;
-    //color: #8a8883;
+    color: var(--link-404-button);
     text-align: center;
 }

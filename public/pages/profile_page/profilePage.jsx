@@ -8,7 +8,7 @@ import './profilePage.scss';
 export default function ProfilePage({ isUserProfile = true }) {
     let [searchParams, setSearchParams] = useSearchParams();
 
-    //const userid = useSelector(state => state.user.userId);
+    const userid = useSelector(state => state.user.userId);
     const userData = useSelector(state => state.user.userData);
 
     const navigate = useNavigate();
@@ -91,9 +91,46 @@ export default function ProfilePage({ isUserProfile = true }) {
         }
     ])
 
+    const fetchDataSubscribe = (url, method, count, author) => {
+        const fecthData = async () => {
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(author)
+                })
+
+                if (!response.ok) {
+                    throw new Error("Ошибка получения данных от сервера!!");
+                }
+
+                setSubscribers(subscribers + count);
+                setSubscribed(!subscribed);
+
+            } catch (error) {
+                console.error('Ошибка обработки данных.', error);
+            }
+        };
+
+        fecthData();
+    };
+
     const handleClickSubscribe = () => {
-        setSubscribed(!subscribed);
-        subscribtions === 0 ? setSubscribtions(subscribtions + 1) : setSubscribtions(subscribtions - 1);
+        const author = { authorID: Number(userIdProfile) };
+
+        if (!subscribed) {
+            const UrlWithParam = new URL(`http://172.24.80.146:8080/users/${userid}/subscribe`);
+            UrlWithParam.search = encodeQueryParameters(author);
+            fetchDataSubscribe(UrlWithParam, 'POST', +1, author);
+        }
+        else {
+            const UrlWithParam = new URL(`http://172.24.80.146:8080/users/${userid}/discard`);
+            UrlWithParam.search = encodeQueryParameters(author);
+            fetchDataSubscribe(UrlWithParam, 'DELETE', -1, author);
+        }
+        //subscribtions === 0 ? setSubscribtions(subscribtions + 1) : setSubscribtions(subscribtions - 1);
     }
 
     const toggleShowUnsubscribe = () => {
@@ -101,7 +138,7 @@ export default function ProfilePage({ isUserProfile = true }) {
     }
 
     const toggleHideUnsubscribe = () => {
-        setMouseEnter(false)
+        setMouseEnter(false);
     }
 
     const toggleEditDescription = () => {
@@ -166,6 +203,12 @@ export default function ProfilePage({ isUserProfile = true }) {
             setUserName(data.face.username);
             setSubscribtions(data.subscribed);
             setDescription(data.tale);
+            console.log("userId", userID);
+            console.log("userIco", userIco);
+            console.log("userBackground", userBackground);
+            console.log("userName", userName);
+            console.log("userSubscriptions", subscribtions);
+            console.log("userDescription", description);
         } catch (error) {
             console.error("Ошибка получения данных.", error);
             navigate("/404");
@@ -191,6 +234,14 @@ export default function ProfilePage({ isUserProfile = true }) {
             setSubscribtions(userData.subscribed);
             setDescription(userData.tale);
             setNewDescription(description);
+            console.log("userId", userID);
+            console.log("userIco", userIco);
+            console.log("userBackground", userBackground);
+            console.log("userName", userName);
+            console.log("userSubscriptions", subscribtions);
+            console.log("userDescription", description);
+
+            console.log("userData", userData);
         }
 
         console.log(isUserProfile);
@@ -204,6 +255,8 @@ export default function ProfilePage({ isUserProfile = true }) {
         window.addEventListener('resize', handleResize);
 
         handleResize();
+
+
 
         return () => window.removeEventListener('resize', handleResize);
     }, []);
@@ -272,7 +325,7 @@ export default function ProfilePage({ isUserProfile = true }) {
                                             className="profile p-description d-text dd-edit-desc"
                                         />
                                         <button type="submit" className="profile p-description d-container__change-description">
-                                            <PlayerIcons icon_name={"settings_apply"} classname="profile p-description d-container__change-description__button"/>
+                                            <PlayerIcons icon_name={"settings_apply"} classname="profile p-description d-container__change-description__button" />
                                         </button>
                                     </form>
                                 </>

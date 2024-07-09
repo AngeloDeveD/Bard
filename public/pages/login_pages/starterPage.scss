@@ -1,3 +1,5 @@
+//@import "../../../src/index.scss";
+
 @font-face {
     font-family: 'Inter';
     src: url('./../../fonts/Inter-VariableFont_slnt.ttf') format('ttf');
@@ -40,7 +42,8 @@ a {
 }
 
 .container {
-    //background-color: #1B1818;
+    background-color: var(--login-page-bg-color);
+    backdrop-filter: blur(var(--blur-panels));
     border-radius: 7px;
     width: 80%;
     margin: 5% auto;
@@ -88,6 +91,7 @@ a {
 
             &:enabled {
                 border: 2px solid #1B9EFD;
+                cursor: pointer;
                 &:hover {
                     background-color: #1B9EFD;
                 }

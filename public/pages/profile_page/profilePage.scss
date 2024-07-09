@@ -1,3 +1,5 @@
+//@import "../../../src/index.scss";
+
 .profile {
     $margin-left-in-upper-main: 30px;
 
@@ -83,16 +85,16 @@
 
         &.b-all-buttons {
             //button color in normal view
-            $background-subscribe: rgba($color: #19BB55, $alpha: 1.0);
-            $background-unsubscribe: rgba($color: #bd1414, $alpha: 1.0);
-            $background-subscribed: rgba($color: #67776D, $alpha: 1.0);
-            $background-edit-profile: rgba($color: #FFFFFF, $alpha: 0.0);
+            $background-subscribe: var(--subscribe-button-background);
+            $background-unsubscribe: var(--unsubscribe-button-background);
+            $background-subscribed: var(--subscribed-button-background);
+            $background-edit-profile: var(--edit-profile-button-background);
 
             //border color in normal view
-            $border-subscribe: rgba($color: #19BB55, $alpha: 1.0);
-            $border-unsubscribe: rgba($color: #bd1414, $alpha: 1.0);
-            $border-subscribed: rgba($color: #67776D, $alpha: 1.0);
-            $border-edit-profile: rgba($color: #FFFFFF, $alpha: 1.0);
+            $border-subscribe: var(--subscribe-button-border);
+            $border-unsubscribe: var(--unsubscribe-button-border);
+            $border-subscribed: var(--subscribed-button-border);
+            $border-edit-profile: var(--edit-profile-button-border);
 
             //general button settings
             width: 215px;
@@ -204,10 +206,6 @@
             display: block;
             align-content: center;
 
-            &:hover {
-                //text-decoration: underline;
-            }
-
             &.dd-edit-desc {
                 width: 100%;
                 border-radius: 7px;
@@ -218,6 +216,10 @@
                 //border-width: 1px;
                 background-color: rgba($color: #000000, $alpha: 0.0);
                 color: rgba($color: #ffffff, $alpha: 1.0);
+
+                &:focus {
+                    outline: var(--focus-params);
+                }
             }
 
             &__form {

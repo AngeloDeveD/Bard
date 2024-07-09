@@ -1,3 +1,5 @@
+//@import "../../../src/index.scss";
+
 .add-pl {
     overflow: hidden;
     text-align: center;
@@ -11,7 +13,8 @@
     min-width: 250px;
     border-radius: 15px;
     z-index: 1000;
-    //background-color: #333;
+    background-color: var(--add-to-playlist-panel-bg-color);
+    backdrop-filter: blur(var(--blur-panels));
     border-style: none;
     color: #fff;
     box-shadow: 0px 0px 12px black;
@@ -113,17 +116,18 @@
         left: 0;
         right: 0;
         align-content: center;
-        background-color: rgba($color: #000000, $alpha: 0.7);
+        background-color: var(--add-to-playlist-settings-panel-bg-shadow-color);
     }
 
     &__container {
         width: 85%;
         height: max-content;
-        background-color: #333;
+        border-color: var(--add-to-playlist-settings-panel-border-color);
+        background-color: var(--add-to-playlist-settings-panel-bg-color);
+        backdrop-filter: blur(var(--blur-panels));
         border-radius: 15px;
         margin-inline: auto;
         padding-top: 10px;
-        border-color: white;
         border-style: solid;
         border-width: 1px;
     }

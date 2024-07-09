@@ -1,3 +1,5 @@
+//@import "../../../src/index.scss";
+
 html,
 body {
     height: 100%;
@@ -31,7 +33,8 @@ body {
 }
 
 .main-backdrop {
-    //background-color: #333333;
+    background-color: var(--main-panel-bg-color);
+    backdrop-filter: blur(var(--blur-panels));
     border-radius: 15px;
     overflow-y: scroll;
     overflow-x: hidden;

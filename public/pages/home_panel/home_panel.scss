@@ -1,3 +1,5 @@
+//@import "../../../src/index.scss";
+
 @font-face {
     font-family: 'Inter';
     src: url('./../../fonts/Inter-VariableFont_slnt.ttf') format('truetype');
@@ -16,7 +18,8 @@
 
 .backdrop{
     width: max-content;
-    //background-color: #333;
+    background-color: var(--home-panel-bg-color);
+    backdrop-filter: blur(var(--blur-panels));
     border-radius: 15px;
     &.img{
         width: 50px;
@@ -52,7 +55,7 @@
     border-radius: 5px;
     outline: none;
     border-style: solid;
-    border-color: rgba(#0000, $alpha: 0.0);
+    border-color: rgba($color:#0000, $alpha: 0.0);
     color: #FFF;
     position: relative;
     margin-inline: 10%;
@@ -60,17 +63,26 @@
         margin-bottom: 28px;
     }
 
-    &.nav{
+    // &.nav{
         
-    }
+    // }
 
     &.pressed{
-        //background-color: rgba(#0000, $alpha: 0.0);
+        background-color: var(--home-panel-buttons-pressed);
         cursor: pointer;
+
+        &:hover {
+            background-color: var(--home-panel-buttons-pressed-hover);
+        }
     }
 
     &.unpressed{
-        //background-color: rgba(#908B8B, $alpha: 7.9);
-        cursor: default
+        background-color: var(--home-panel-buttons-unpressed);
+        cursor: default;
+        
+        &:hover {
+            background-color: var(--home-panel-buttons-unpressed-hover);
+        }
+        
     }
 }

@@ -9,7 +9,7 @@ import { setUser, setUserEmail } from "../../../src/actions/userActions";
 
 import './settingPage_main.scss';
 
-const ChangeEmail = () => {
+const ChangeEmail = ({ closeSettings }) => {
     const [confirmedPassword, setConfirmedPassword] = useState(false);
     const [confirmedEmail, setConfirmedEmail] = useState(false);
     const [codeSended, setCodeSended] = useState(false);
@@ -20,7 +20,7 @@ const ChangeEmail = () => {
 
     const submitConfirmPassword = (e) => {
         e.preventDefault();
-
+        closeSettings();
     };
 
     const submitConfirmEmail = (e) => {
@@ -58,7 +58,10 @@ const ChangeEmail = () => {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                     />
-                                    <button type="sumbit" className="changeEmail__main-content__button">Подтвердить</button>
+                                    <div className="changeEmail__buttons-container">
+                                        <button className="inputField Button middle" onClick={closeSettings}>Отменить</button>
+                                        <button type="sumbit" className="inputField Button middle">Подтвердить</button>
+                                    </div>
                                 </form>
                             </>
                             :
@@ -73,7 +76,7 @@ const ChangeEmail = () => {
                                                 value={newEmail}
                                                 onChange={(e) => setNewEmail(e.target.value)}
                                             />
-                                            <button type="sumbit" className="changeEmail__main-content__button">Изменить</button>
+                                            <button type="sumbit" className="inputField Button middle">Изменить</button>
                                         </form>
                                     </>
                                     :
@@ -93,7 +96,7 @@ const ChangeEmail = () => {
                                                 value={emailConfirm.code}
                                                 onChange={changeEmailConfirm}
                                             />
-                                            <button type="sumbit" className="changeEmail__main-content__button">{!codeSended ? "Получить код" : "Подтвердить"}</button>
+                                            <button type="sumbit" className="inputField Button middle">{!codeSended ? "Получить код" : "Подтвердить"}</button>
                                         </form>
                                     </>
                                 }
@@ -164,7 +167,10 @@ const ChangePassword = ({ closeSettings }) => {
                                 value={password.confirmNewPassword}
                                 onChange={handleChangePassword}
                             />
-                            <button type="sumbit" className="inputField Button middle" disabled={!giveAccess}>Изменить</button>
+                            <div className="changeEmail__buttons-container">
+                                <button type="sumbit" className="inputField Button middle" disabled={!giveAccess}>Изменить</button>
+                                <button className="inputField Button middle" onClick={closeSettings}>Отменить</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -262,7 +268,7 @@ export default function SettingPageMain() {
     const handleSubmitNewNickname = (e) => {
         e.preventDefault();
 
-        const sendData = {newName: newNickname};
+        const sendData = { newName: newNickname };
 
         const urlWithParams = new URL(`http://172.24.80.146:8080/users/${userData.face.itemID}/change-name`);
         urlWithParams.search = encodeQueryParameters(sendData);
@@ -298,6 +304,7 @@ export default function SettingPageMain() {
     const handleSettingsClose = () => {
         setSettingsActive(false);
         setChangePassword(false);
+        setChangeEmail(false);
     };
 
     const updateAvatar = (imgSrc) => {
@@ -484,7 +491,7 @@ export default function SettingPageMain() {
                                 />
                             </>
                         }
-                        {changeEmail && <ChangeEmail user={user} />}
+                        {changeEmail && <ChangeEmail closeSettings={handleSettingsClose} />}
                         {changePassword && <ChangePassword closeSettings={handleSettingsClose} />}
                     </div>
                 </>

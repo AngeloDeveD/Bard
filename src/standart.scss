@@ -1,0 +1,138 @@
+//@import 'index.scss';
+
+// body {
+//     background: var(--bg-color);
+// }
+
+//Класс поискового компонента
+// .upper_panel {
+//     background-color: var(--search-panel-bg-color);
+//     backdrop-filter: blur(var(--blur-panels));
+// }
+
+//Класс компонента контента
+// .main-backdrop {
+//     background-color: var(--main-panel-bg-color);
+//     backdrop-filter: blur(var(--blur-panels));
+// }
+
+//Класс основного компонента страницы
+// .backdrop {
+//     background-color: var(--home-panel-bg-color);
+//     backdrop-filter: blur(var(--blur-panels));
+// }
+
+//Класс компонента списка плейлистов
+// .lib {
+//     &.backdrop {
+//         background-color: var(--library-panel-bg-color);
+//         backdrop-filter: blur(var(--blur-panels));
+//     }
+// }
+
+//Класс компонента плеера
+// .playerContainer {
+//     background-color: var(--player-panel-bg-color);
+//     backdrop-filter: blur(var(--blur-panels));
+// }
+
+// .add-pl {
+//     background-color: var(--add-to-playlist-panel-bg-color);
+//     backdrop-filter: blur(var(--blur-panels));
+// }
+
+// .container {
+//     background-color: var(--login-page-bg-color);
+//     backdrop-filter: blur(var(--blur-panels));
+// }
+
+// .Profile {
+//     background-color: var(--profile-main-panel);
+//     backdrop-filter: blur(var(--blur-panels));
+// }
+
+// .buttons {
+//     &.pressed {
+//         background-color: var(--home-panel-buttons-pressed);
+
+//         &:hover {
+//             background-color: var(--home-panel-buttons-pressed-hover);
+//         }
+//     }
+
+//     &.unpressed {
+//         background-color: var(--home-panel-buttons-unpressed);
+
+//         &:hover {
+//             background-color: var(--home-panel-buttons-unpressed-hover);
+//         }
+//     }
+// }
+
+// .LinkDis {
+//     color: var(--link-404-button);
+// }
+
+// .Profile-Button {
+//     &.Enable {
+//         color: var(--profile-main-button-panel-text-enable);
+//     }
+
+//     &.Disable {
+//         color: var(--profile-main-button-panel-text-disable);
+//     }
+// }
+
+// .changeEmail__container {
+//     background-color: var(--change-email-password-bg-color);
+// }
+
+// .profile {
+//     &.p-description {
+//         &.d-text {
+//             &.dd-edit-desc {
+//                 &:focus {
+//                     outline: var(--focus-params);
+//                 }
+//             }
+//         }
+//     }
+// }
+
+// .panel_inside {
+//     &.search_panel {
+//         &.searchInput {
+//             &:focus {
+//                 outline: var(--focus-params);
+//             }
+//         }
+//     }
+// }
+
+// // .editor-playlist__container {
+// //     background-color: var(--add-to-playlist-settings-panel-bg-color);
+// //     //background-color: var(--add-to-playlist-settings-panel-bg-color);
+// // }
+
+// .editor-playlist{
+//     &__background{
+//         background-color: var(--add-to-playlist-settings-panel-bg-shadow-color);
+//     }
+    
+//     &__container{
+//         border-color: var(--add-to-playlist-settings-panel-border-color);
+//         background-color: var(--add-to-playlist-settings-panel-bg-color);
+//         backdrop-filter: blur(var(--blur-panels));
+//     }
+// }
+
+//Стили выделения текста
+
+
+//Стили ползунков
+
+
+// .allPanels {
+//     display: flex;
+//     flex-direction: row;
+// }

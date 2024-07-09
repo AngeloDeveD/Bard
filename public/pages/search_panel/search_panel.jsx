@@ -23,13 +23,10 @@ export default function SearchPanel() {
 
     const { inputRef } = useContext(FocusContext);
 
+    const [isDisabled, setIsDisabled] = useState(true);
+
     const [searchArray, setSearchArray] = useState([
-        "123",
-        "456",
-        "789",
-        "test_1",
-        "test_2",
-        "test_3"
+        "Данная функция находится в разработке."
     ]);
 
     const handleSearchChange = (e) => {
@@ -42,7 +39,7 @@ export default function SearchPanel() {
         const encSearch = encodeURIComponent(search.searchText);
         setShowSearchPanel(false);
         //console.log(`encode text: ${encSearch}`);
-        navigate(`/search?sr=${encSearch}`);
+        !isDisabled && navigate(`/search?sr=${encSearch}`);
     };
 
     const setShowSettings = () => {
@@ -112,7 +109,7 @@ export default function SearchPanel() {
             <div className={`upper_panel`} style={showSearchPanelHelper ? { borderBottomLeftRadius: "0px" } : {}}>
                 <div className="panel_inside">
                     <div className="panel_inside search_panel">
-                        <form onSubmit={handleSearch} className="search_container_panel">
+                        <form onSubmit={handleSearch} className="search_container_panel" disabled={isDisabled}>
                             <input
                                 ref={inputRef}
                                 className={`panel_inside search_panel searchInput ${showSearchPanelHelper ? "input-search-clicked" : ""}`}
@@ -148,7 +145,7 @@ export default function SearchPanel() {
                                 }
 
                                 return (
-                                    <button key={index} className={`searchPanel__search-buttons ${buttonStyle}`} onClick={() => handleAddToSearchPanel(search)}>
+                                    <button key={index} className={`searchPanel__search-buttons ${buttonStyle}`} onClick={() => handleAddToSearchPanel(search)} disabled={isDisabled}>
                                         {search}
                                     </button>
                                 );

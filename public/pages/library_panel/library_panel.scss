@@ -1,10 +1,13 @@
+//@import "../../../src/index.scss";
+
 .lib {
     height: 150px;
 
     border: 1px;
 
     &.backdrop {
-        //background-color: #333;
+        background-color: var(--library-panel-bg-color);
+        backdrop-filter: blur(var(--blur-panels));
         width: auto;
         border-radius: 15px;
         margin-top: 7px;        

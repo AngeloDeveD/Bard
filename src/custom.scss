@@ -1,46 +1,56 @@
-$custom-main-color: rgba($color: #000000, $alpha: 0.0);
+//@import 'index.scss';
 
-$custom-background-color: linear-gradient(90deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+:root {
+	--bg-size: 400% 400%;
+	--bg-color: linear-gradient(140deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	--main-panel-bg-color: rgba($color: #000000, $alpha: 0.0);
+	--search-panel-bg-color: rgba($color: #000000, $alpha: 0.0);
+	--home-panel-bg-color: rgba($color: #000000, $alpha: 0.0);
+	--library-panel-bg-color: rgba($color: #000000, $alpha: 0.0);
+	--login-page-bg-color: #00000012;
+	--player-panel-bg-color: rgba($color: #000000, $alpha: 0.0);
+	--profile-main-panel: rgba($color: #000000, $alpha: 0.0);
+	--selection-color: #23d5ab;
+	--profile-main-button-panel-text-disable: #646464;
+	--blur-panels: 30px;
+	--home-panel-buttons-pressed: rgba($color: #ffffff, $alpha: 0.3);
+	--home-panel-buttons-pressed-hover: rgba($color: #000000, $alpha: 0.2);
+	--link-404-button: #FFF;
+	--home-panel-buttons-unpressed-transition: background-color 0.2s ease;
+	--add-to-playlist-panel-bg-color: rgba($color: #000000, $alpha: 0.0);
+	--add-to-playlist-settings-panel-bg-color: rgba($color: #000000, $alpha: 0.5);
+}
 
-$custom-selection-color: #23d5ab;
-
-$custom-main-panel-button-pressed: rgba($color: #ffffff, $alpha: 0.3);
-
-$custom-main-panel-button-navigate: rgba($color: #000000, $alpha: 0.2);
-
-$custom-404-link-button: #FFF;
-
-$custom-blur-panels: 30px;
-
-$custom-profile-main-button-panel-text-disable: #646464;
-
-body{
-    //background: $custom-background-color;
-    background-size: 400% 400%;
-	animation: gradient 10s ease infinite;
+body {
+	//background: $custom-background-color;
+	background-size: var(--bg-size);
+	animation: gradient 20s ease-in-out infinite;
 }
 
 @keyframes gradient {
 	0% {
 		background-position: 0% 50%;
 	}
+
 	50% {
 		background-position: 100% 50%;
 	}
+
 	100% {
 		background-position: 0% 50%;
 	}
 }
 
-.buttons{
-	&.pressed{
-		:hover{
-			background-color: $custom-main-panel-button-navigate;
-		}
-	}
-
-	&.unpressed{
-		transition: background-color 0.2s ease;
-		background-color: $custom-main-panel-button-pressed;
-	}
+.Container_start-loading {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 400%;
+	height: 400%;
+	z-index: 3000;
+	background-size: var(--bg-size);
+	background: linear-gradient(150deg, #FFF0, #FFF0, #23a6d5, #23d5ab);
+	animation: gradient 10s ease infinite;
 }

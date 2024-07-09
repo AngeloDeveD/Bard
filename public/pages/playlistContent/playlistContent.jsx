@@ -1,59 +1,11 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, Navigate, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from "react-redux";
-import { FocusContext } from '../../../src/context/FocusContext';
+import { useSelector } from "react-redux";
 
-import { setTrackId } from '../../../src/actions/userActions';
-
+import CreateContent from './createContent';
 import PlayerIcons from '../player_icons/player_icons';
 
 import './playlistContent.scss';
-
-const Content = ({ playlistData = [] }) => {
-    const dispatch = useDispatch();
-
-    const { setFocus } = useContext(FocusContext);
-
-    const [activeSong, setActiveSong] = useState(null);
-
-    const playSong = (song_id) => {
-        dispatch(setTrackId(song_id));
-        setActiveSong(song_id);
-    };
-
-    return (
-        <>
-            {playlistData && playlistData.length !== 0 ?
-                playlistData.map((song, index) => {
-                    const isActive = song.itemID === activeSong;
-                    const buttonClass = isActive ? 'active' : '';
-                    //console.log("song-item", song.itemID);
-                    return (
-                        <button key={index} className={`user-playlist-button__container ${buttonClass}`} onClick={() => playSong(song.itemID)}>
-                            <img className='user-playlist-button__song-icon' src={`http://172.24.80.146/images/${song.coverID}.webp`}></img>
-                            <div className='user-playlist-button__incontainer'>
-                                <h3 className='user-playlist-button alltext song-title_pl'>{song.title}</h3>
-                            </div>
-                            <div className='user-playlist-button__incontainer'>
-                                <h3 className='user-playlist-button alltext song-author_pl'>{song.username}</h3>
-                            </div>
-                            <div className='user-playlist-button__incontainer'>
-                                <h3 className='user-playlist-button alltext song-time_pl'>{`00:00`}</h3>
-                            </div>
-                        </button>
-                    );
-                })
-                :
-                <div className='user-playlist-button__undefined__container'>
-                    <div className="user-playlist-button__undefined__container-content">
-                        <h3 className='user-playlist-button__undefined__text'>{`Плейлист пуст :(`}</h3>
-                        <button className='user-playlist-button__undefined__button' onClick={setFocus}>Добавить трек</button>
-                    </div>
-                </div>
-            }
-        </>
-    );
-};
 
 export default function PlaylistContent({ isAlb = false }) {
     const navigate = useNavigate();
@@ -71,6 +23,7 @@ export default function PlaylistContent({ isAlb = false }) {
     const [playlistInfo, setPlaylistInfo] = useState({
         title: '',
         description: '',
+        duration: '--:--',
     });
 
     const [playlistParams, setPlaylistParams] = useState({
@@ -232,13 +185,13 @@ export default function PlaylistContent({ isAlb = false }) {
         const playlistId = searchParams.get('pl');
         switch (playlistId) {
             case "hyst":
-                setPlaylistInfo({ title: "История прослушивания", description: "Создано автоматически" });
+                setPlaylistInfo({ title: "История прослушивания", description: "Создано автоматически", duration: ""  });
                 setPlaylistParams({ img_url: "playlist-history-icon", isUsers: true, isAutoCreated: true });
                 fetchDataHistory(`http://172.24.80.146:8080/users/${userid}/listened`);
                 break;
 
             case "lK":
-                setPlaylistInfo({ title: "Понравившаяся музыка", description: "Создано автоматически" });
+                setPlaylistInfo({ title: "Понравившаяся музыка", description: "Создано автоматически", duration: ""  });
                 setPlaylistParams({ img_url: "playlist-liked-icon", isUsers: true, isAutoCreated: true });
                 setPlaylistData(userData.userActionsModel.likedMusic);
                 break;
@@ -247,7 +200,7 @@ export default function PlaylistContent({ isAlb = false }) {
                 {
                     const findGenre = genres.find(genreObj => genreObj.genre === playlistId);
                     if (findGenre !== undefined) {
-                        setPlaylistInfo({ title: findGenre.title, description: "Список треков по жанру" });
+                        setPlaylistInfo({ title: findGenre.title, description: "Список треков по жанру", duration: "" });
                         setPlaylistParams({ img_url: `playlist-${findGenre.genre}-icon`, isUsers: false, isAutoCreated: true });
                         fetchDataGenre(`http://172.24.80.146:8080/music/recent?page=0&?genre=${findGenre.genre}`);
                     }
@@ -325,7 +278,7 @@ export default function PlaylistContent({ isAlb = false }) {
                                     }
                                 </div>
                                 <h3 className='user-playlist__info'>{playlistInfo.description}</h3>
-                                <h3 className='user-playlist__info'>{`Длительность: --:--`}</h3>
+                                <h3 className='user-playlist__info'>{playlistInfo.duration !== "" && `Длительность: ${playlistInfo.duration}`}</h3>
                                 {!playlistParams.isUsers && !playlistParams.isAutoCreated ?
                                     <>
                                         <div className='user-playlist__info__add-to-favorite__container'>
@@ -341,7 +294,7 @@ export default function PlaylistContent({ isAlb = false }) {
                             </div>
                         </div>
                         <div className='user-playlist__songs-container' style={playlistData.length !== 0 ? { marginLeft: "50px" } : {}}>
-                            <Content playlistData={playlistData} />
+                            <CreateContent playlistData={playlistData} />
                         </div>
                     </div>
                 </>

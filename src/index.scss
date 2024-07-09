@@ -1,171 +1,134 @@
-//@import 'custom.scss';
+:root {
+    //background color
+    --bg-size: 400% 400%;
+    --bg-color: linear-gradient(#5F51B5, #000000) fixed;
 
-$background-color: if(global-variable-exists('custom-background-color'), $custom-background-color, linear-gradient(#5F51B5, #000000) fixed); //Цвет заднего фона сайта
+    //Main 
+    /*Colors*/
+    --main-panel-bg-color: #1B1818;
+    --login-page-bg-color: #1B1818;
+    --home-panel-bg-color: #1B1818;
+    --library-panel-bg-color: #1B1818;
+    --search-panel-bg-color: #1B1818;
+    --profile-main-panel: #1B1818;
+    --player-panel-bg-color: #1B1818;
+    --change-email-password-container-color: #1b18185a;
+    --change-email-password-bg-color: #1B1818;
 
-$main-color: if(global-variable-exists('custom-main-color'), $custom-main-color, #1B1818); //Цвет основных компонентов (по умолчанию: #1B1818)
+    /*Settings*/
+    --blur-panels: 0px;
 
-$selection-color: if(global-variable-exists('custom-selection-color'), $custom-selection-color, #7800d4); //Цвет выделения текста (по умолчанию: #7800d4)
+    //Selection color
+    --selection-color: #7800d4;
 
-$scrollbar-track-background: rgba($color: #000000, $alpha: 0); //Цвет трека скроллбара (по умолчанию: rgba($color: #000000, $alpha: 0))
-$scrollbar-thumb-background: #FFFFFF; //Цвет ползунка скроллбара (по умолчанию: #FFFFFF)
-$scrollbar-width-height: 8px; //Ширина и высота скроллбара (по умолчанию: 10px)
-$scrollbar-thumb-border-radius: 15px; //border-radius ползунка скроллбара (по умолчанию: 15px)
+    //ScrollBar color
+    --scrollbar-track-background: #0000 //website track color
+    --scrollbar-slider-background: #FFFFFF; //website slider color
+    --scrollbar-width-height: 8px; //website width scrollbar
+    --scrollbar-thumb-border-radius: 15px; //website border-radius scrollbar
 
-$login-page-bg-color: $main-color; //Цвет компонента страницы логина, регистрации и восстановления аккаунта
-$home-panel-bg-color: $main-color; //Цвет основного компонента страницы
-$library-panel-bg-color: $main-color; //Цвет компонента списка плейлистов
-$search-panel-bg-color: $main-color; //Цвет поискового компонента
-$main-panel-bg-color: $main-color; //Цвет компонента контента
-$player-panel-bg-color: $main-color; //Цвет компонента плеера
-$add-to-playlist-panel-bg-color: $main-color; //Цвет компонента добавления трека в плейлист
-$profile-main-panel: $main-color; //Цвет компонента кнопок ну которые те самые...
-$change-email-password-bg-color: $main-color;
+    //Main player colors
+    --player-panel-border-color: #0000; //border player's color
+    --player-panel-text-color: #ffffff; //text player's color
 
-$profile-main-button-panel-text-enable: #FFFFFF; //Цвет текста включённой кнопки у того самого компонента.... (по умолчанию: #FFFFFF)
-$profile-main-button-panel-text-disable: if(global-variable-exists('custom-profile-main-button-panel-text-disable'), $custom-profile-main-button-panel-text-disable, gray); //Цвет текста выключённой кнопки у того самого компонента.... (по умолчанию: gray)
+    //Player buttons
 
-$blur-panels: if(global-variable-exists('custom-blur-panels'), $custom-blur-panels, 0px); //Блюр панелей (по умолчанию: 0px)
+    /*Play-pause button*/
+    --player-button-play-background-color: #862ae2; //background play button
+    --player-button-pause-background-color: #862ae2; //background pause button
+    --player-button-play-icon-color: #ffffff; //icon play button
+    --player-button-pause-icon-color: #ffffff; //icon pause button
 
-$home-panel-buttons-unpressed: if(global-variable-exists('custom-main-panel-button-pressed'), $custom-main-panel-button-pressed, rgba(#908B8B, $alpha: 7.9)); //Цвет нажатой кнопки(по умолчанию: rgba(#908B8B, $alpha: 7.9))
-$home-panel-buttons-pressed: rgba(#0000, $alpha: 0.0); //Цвет ненажатой кнопки(по умолчанию: rgba(#0000, $alpha: 0.0))
+    /*Previous, next, like and add to playlist buttons*/
+    --player-button-previous-icon-color: #ffffff; //previous track button
+    --player-button-next-icon-color: #ffffff; //next track button
+    --player-button-add-to-playlist-icon-color: #ffffff; //icon add to playlist button
+    --player-button-like-unpressed-icon-color: #ffffff; //unpressed icon like button
+    --player-button-like-pressed-icon-color: #ffffff; //pressed icon like button
 
-$link-404-button: if(global-variable-exists('custom-404-link-button'), $custom-404-link-button, #8a8883); //Цвет ссылки на странице 404(по умолчанию: #8a8883)
+    /*Thumb*/
+    --player-timeline-slider-pressed-color: #ffffff; //slider button color pressed 
+    --player-timeline-slider-unpressed-color: #ffffff; //slider button color unpressed
+    --player-timeline-thumb-pressed-color: #a6a6a6; //track button color pressed
+    --player-timeline-thumb-unpressed-color: #a6a6a6; //track button color unpressed
+
+    //Volume
+    /*Slider button*/
+    --player-volume-inside-unpressed-color: #700FEB; //volume color inside unpressed
+    --player-volume-inside-pressed-color: #700FEB; //volume color inside pressed
+    --player-volume-outside-unpressed-color: #ffffff; //volume color outside unpressed
+    --player-volume-outside-pressed-color: #ffffff; //volume color outside pressed
+
+    /*Track*/
+    --player-volume-line-unpressed-color: #ffffff; //track line color unpressed
+    --player-volume-line-pressed-color: #ffffff; //track line color pressed
+
+    //Panel "add to playlist"
+    /*Main panel*/
+    --add-to-playlist-panel-bg-color: #1B1818; //Background color Add To Playlist container
+    --add-to-playlist-panel-text-color: #ffffff; //Text color Add To Playlist container
+
+    /*Settings panel*/
+    --add-to-playlist-settings-panel-bg-color: #333; //Background color Add To Playlist settings container
+    --add-to-playlist-settings-panel-bg-shadow-color: rgba(0, 0, 0, 0.705); //Box Shadow color Add To Playlist settings container
+    --add-to-playlist-settings-panel-text-color: #ffffff; //Text color Add To Playlist settings container
+    --add-to-playlist-settings-panel-border-color: #ffffff; //Border color Add To Playlist settings container
+
+    //Profile Page
+    --profile-main-button-panel-text-enable: #FFFFFF;
+    --profile-main-button-panel-text-disable: #908b8b;
+
+    /*Subscribe buttons*/
+    --subscribe-button-background: #19BB55;
+    --unsubscribe-button-background: #bd1414;
+    --subscribed-button-background: #67776D;
+    --edit-profile-button-background: #FFF0;
+
+    --subscribe-button-border: #19BB55;
+    --unsubscribe-button-border: #bd1414;
+    --subscribed-button-border: #67776D;
+    --edit-profile-button-border: #FFFFFF;
+
+    --home-panel-buttons-unpressed: #908B8BDE;
+    --home-panel-buttons-unpressed-hover: #908B8BDE;
+    --home-panel-buttons-pressed: #0000;
+    --home-panel-buttons-pressed-hover: #0000;
+    --home-panel-buttons-pressed-transition: background-color .0s;
+    --home-panel-buttons-unpressed-transition: background-color .0s;
+    --link-404-button: #8a8883;
+    --focus-params: 1px solid #908b8b;
+    --scrollbar-thumb-color: #FFF;
+    --scrollbar-thumb-hover-color: #FFF;
+    --search-panel-background-color: #FFF;
+}
 
 body {
-    background: $background-color;
+    background: var(--bg-color);
 }
 
-//Класс поискового компонента
-.upper_panel {
-    background-color: $search-panel-bg-color;
-    backdrop-filter: blur($blur-panels);
-}
-
-//Класс компонента контента
-.main-backdrop {
-    background-color: $main-panel-bg-color;
-    backdrop-filter: blur($blur-panels);
-}
-
-//Класс основного компонента страницы
-.backdrop {
-    background-color: $home-panel-bg-color;
-    backdrop-filter: blur($blur-panels);
-}
-
-//Класс компонента списка плейлистов
-.lib {
-    &.backdrop {
-        background-color: $library-panel-bg-color;
-        backdrop-filter: blur($blur-panels);
-    }
-}
-
-//Класс компонента плеера
-.playerContainer {
-    background-color: $player-panel-bg-color;
-    backdrop-filter: blur($blur-panels);
-}
-
-.add-pl {
-    background-color: $add-to-playlist-panel-bg-color;
-    backdrop-filter: blur($blur-panels);
-}
-
-.container {
-    background-color: $login-page-bg-color;
-    backdrop-filter: blur($blur-panels);
-}
-
-.Profile {
-    background-color: $profile-main-panel;
-    backdrop-filter: blur($blur-panels);
-}
-
-.buttons {
-    &.pressed {
-        background-color: $home-panel-buttons-pressed;
-    }
-
-    &.unpressed {
-        background-color: $home-panel-buttons-unpressed;
-    }
-}
-
-.LinkDis {
-    color: $link-404-button;
-}
-
-.Profile-Button {
-    &.Enable {
-        color: $profile-main-button-panel-text-enable;
-    }
-
-    &.Disable {
-        color: $profile-main-button-panel-text-disable;
-    }
-}
-
-.changeEmail__container {
-    background-color: $change-email-password-bg-color;
-}
-
-// :focus{
-//     outline: 2px solid $selection-color;
-// }
-
-.profile {
-    &.p-description {
-        &.d-text {
-            &.dd-edit-desc {
-                &:focus {
-                    outline: 1px solid #908b8b;
-                }
-            }
-        }
-    }
-}
-
-.panel_inside {
-    &.search_panel {
-        &.searchInput {
-            &:focus {
-                outline: 1px solid #908b8b;
-            }
-        }
-    }
-}
-
-//Стили выделения текста
 ::selection {
-    background-color: $selection-color;
+    background-color: var(--selection-color);
 }
 
 ::-moz-selection {
-    background-color: $selection-color;
+    background-color: var(--selection-color);
 }
 
-//Стили ползунков
 ::-webkit-scrollbar {
-    width: $scrollbar-width-height;
-    height: $scrollbar-width-height;
+    width: var(--scrollbar-width-height);
+    height: var(--scrollbar-width-height);
 }
 
 ::-webkit-scrollbar-track {
-    border-radius: $scrollbar-thumb-border-radius;
-    background: $scrollbar-track-background;
+    border-radius: var(--scrollbar-thumb-border-radius);
+    background: var(--scrollbar-track-background);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #FFFFFF;
-    border-radius: $scrollbar-thumb-border-radius;
-}
+    background: var(--scrollbar-thumb-color);
+    border-radius: var(--scrollbar-thumb-border-radius);
 
-::-webkit-scrollbar-thumb:hover {
-    background: #FFFFFF;
-}
-
-.allPanels {
-    display: flex;
-    flex-direction: row;
+    &:hover {
+        background: var(--scrollbar-thumb-hover-color);
+    }
 }

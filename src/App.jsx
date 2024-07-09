@@ -12,6 +12,8 @@ const NotFound = lazy(() => import('../public/pages/404/404'));
 import { setUser } from "../src/actions/userActions";
 
 import './index.scss';
+import './standart.scss'; 
+//import './custom.scss';
 
 export default function App() {
 
